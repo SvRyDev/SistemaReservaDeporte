@@ -1,0 +1,13 @@
+<?php
+spl_autoload_register(function ($className) {
+    $path = __DIR__ . '\\';
+    $className = str_replace('\\', '/', $className);
+    $file = $path . strtolower($className) . '.php'; // Convert class name to lowercase
+
+    if (file_exists($file)) {
+        require_once $file;
+    } else {
+        die("Autoloader could not find class $className at $file.");
+    }
+});
+?>
