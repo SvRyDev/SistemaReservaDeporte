@@ -5,9 +5,9 @@ RewriteEngine On
 RewriteRule ^public/ - [L]
 
 # Static resources if they exist
-RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+RewriteCond %{DOCUMENT_ROOT}/sistema-reserva-deporte/public/$1 -f
 RewriteRule (.+) public/$1 [L]
 
 # Route all other requests
-RewriteRule (.*) public/index.php?route=$1 [L,QSA]
+RewriteRule ^(.*)$ public/index.php?route=$1 [L,QSA]
 </IfModule>

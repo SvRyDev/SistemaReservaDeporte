@@ -2,7 +2,8 @@
 class HomeController extends Controller {
     public function index() {
         $data = [
-            'title' => 'Welcome'
+            'title' => 'Página de Inicio',
+            'welcomeMessage' => 'Bienvenido a nuestro sistema de reserva de deportes!'
         ];
         $this->view('home', $data);
     }

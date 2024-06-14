@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+.popup-overlay {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  inset: 0;
+}
+
+:root {
+  /* fonts */
+  --text-medium: Poppins;
+  --font-montaga: Montaga;
+  --font-monomaniac-one: "Monomaniac One";
+  --font-montserrat: Montserrat;
+  --font-inter: Inter;
+  --font-monda: Monda;
+
+  /* font sizes */
+  --text-medium-size: 16px;
+  --font-size-5xl: 24px;
+  --font-size-xl: 20px;
+  --font-size-29xl: 48px;
+  --text-mediun-size: 32px;
+  --font-size-mini: 15px;
+  --font-size-21xl: 40px;
+  --font-size-17xl: 36px;
+  --font-size-xs: 12px;
+  --font-size-3xs: 10px;
+
+  /* Colors */
+  --primary: #fff;
+  --color-darkorange: #ff9a1f;
+  --primary1: #363738;
+  --color-black: #000;
+  --color-whitesmoke: #f2f2f2;
+  --color-blue: #6705ff;
+  --text: #fafafa;
+  --text1: #7d8184;
+  --color-aliceblue: #ebf1f6;
+
+  /* Gaps */
+  --gap-11xl: 30px;
+  --gap-xl: 20px;
+  --gap-157xl: 176px;
+  --gap-120xl: 139px;
+  --gap-42xl: 61px;
+  --gap-43xl: 62px;
+  --gap-46xl: 65px;
+  --gap-7xl: 26px;
+  --gap-22xl: 41px;
+  --gap-37xl: 56px;
+  --gap-38xl: 57px;
+  --gap-2xs: 11px;
+
+  /* Paddings */
+  --padding-base: 16px;
+  --padding-mini: 15px;
+  --padding-3xs: 10px;
+  --padding-lgi: 19px;
+  --padding-60xl: 79px;
+  --padding-101xl: 120px;
+  --padding-8xs: 5px;
+  --padding-xl: 20px;
+  --padding-55xl: 74px;
+  --padding-64xl: 83px;
+  --padding-47xl: 66px;
+  --padding-25xl: 44px;
+  --padding-26xl: 45px;
+  --padding-smi: 13px;
+  --padding-2xl: 21px;
+  --padding-48xl: 67px;
+  --padding-xs: 12px;
+
+  /* Border radiuses */
+  --br-5xs: 8px;
+  --br-8xs: 5px;
+  --br-3xs: 10px;
+}
