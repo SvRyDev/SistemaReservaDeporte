@@ -5,7 +5,7 @@ class HomeController extends Controller {
             'title' => 'Página de Inicio',
             'welcomeMessage' => 'Bienvenido a nuestro sistema de reserva de deportes!'
         ];
-        $this->view('home', $data);
+        $this->view('client/home', $data);
     }
 }
 ?>

@@ -5,7 +5,7 @@ class ContactController extends Controller {
             'title' => 'Contacto',
             'content' => 'Aquí puedes poner la información de contacto, como la dirección, teléfono, email, etc.'
         ];
-        $this->view('contact', $data);
+        $this->view('client/contact', $data);
     }
 }
 ?>

@@ -1,10 +1,13 @@
 <?php
 class Controller {
+    use AuthTrait;
+
     protected function view($view, $data = []) {
-        if (file_exists(__DIR__ . '/../views/' . $view . '.php')) {
-            require_once __DIR__ . '/../views/' . $view . '.php';
+        $viewPath = str_replace('.', '/', $view);
+        if (file_exists(__DIR__ . '/../views/' . $viewPath . '.php')) {
+            require_once __DIR__ . '/../views/' . $viewPath . '.php';
         } else {
-            die("View does not exist.");
+            die("View $viewPath does not exist.");
         }
     }
 
@@ -13,7 +16,7 @@ class Controller {
             require_once __DIR__ . '/../models/' . $model . '.php';
             return new $model();
         } else {
-            die("Model does not exist.");
+            die("Model $model does not exist.");
         }
     }
 }

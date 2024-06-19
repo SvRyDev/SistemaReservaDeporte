@@ -12,7 +12,7 @@ define('APP_URL', 'http://localhost/sistema-reserva-deporte');
 define('DEFAULT_CONTROLLER', 'HomeController');
 
 // Nombre Empresa
-define('NOMBRE_EMPRESA','FullBolas');
+define('NOMBRE_EMPRESA','Montalván');
 
 define('STYLE_URL', 'http://localhost/sistema-reserva-deporte/public/css');
 

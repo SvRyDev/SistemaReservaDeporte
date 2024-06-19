@@ -4,13 +4,13 @@ class LoginController extends Controller {
         $data = [
             'title' => 'Login'
         ];
-        $this->view('login', $data);
+        $this->view('client/auth/login', $data);
     }
 
     public function authenticate() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = $_POST['email'];
-            $password = hash(ENCRYPT, $_POST['password']);
+            $password = hash('sha256', $_POST['password']);
 
             $userModel = $this->model('UserModel');
             $user = $userModel->findUserByEmail($email);
@@ -19,8 +19,17 @@ class LoginController extends Controller {
                 // Usuario autenticado correctamente
                 session_start();
                 $_SESSION['user_id'] = $user->idUsuario;
-                $_SESSION['user_email'] = $user->email;
-                $_SESSION['user_name'] = $user->usuario;
+                $_SESSION['user_role'] = $userModel->getUserRole($user->idUsuario);
+                $_SESSION['is_employee'] = $userModel->isEmployee($user->idUsuario);
+
+                // Establecer el correo electrónico y el nombre en la sesión
+                if (isset($user->cliente_email)) {
+                    $_SESSION['user_email'] = $user->cliente_email;
+                    $_SESSION['user_name'] = $user->cliente_nombre; // Asumiendo que el nombre está en el campo `nombre`
+                } elseif (isset($user->empleado_email)) {
+                    $_SESSION['user_email'] = $user->empleado_email;
+                    $_SESSION['user_name'] = $user->empleado_nombre; // Asumiendo que el nombre está en el campo `nombre`
+                }
 
                 header("Location: " . APP_URL);
                 exit();
@@ -30,7 +39,7 @@ class LoginController extends Controller {
                     'title' => 'Login',
                     'error' => 'Credenciales incorrectas. Por favor, intenta de nuevo.'
                 ];
-                $this->view('login', $data);
+                $this->view('client/auth/login', $data);
             }
         } else {
             header("Location: " . APP_URL . "/login");
@@ -42,7 +51,7 @@ class LoginController extends Controller {
         session_start();
         session_unset();
         session_destroy();
-        header("Location: " . APP_URL);
+        header("Location: " . APP_URL . "/login");
         exit();
     }
 }

@@ -5,7 +5,7 @@ class AboutController extends Controller {
             'title' => 'Sobre Nosotros',
             'content' => 'Aquí puedes poner la información sobre tu organización, su historia, misión, visión, etc.'
         ];
-        $this->view('about', $data);
+        $this->view('client/about', $data);
     }
 }
 ?>

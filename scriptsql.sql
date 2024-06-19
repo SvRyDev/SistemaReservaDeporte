@@ -1,4 +1,3 @@
-
 -- Crear tabla Permisos
 CREATE TABLE IF NOT EXISTS Permisos (
     idPermiso INT AUTO_INCREMENT PRIMARY KEY,
@@ -15,49 +14,54 @@ CREATE TABLE IF NOT EXISTS Rol (
     nombre VARCHAR(20) NOT NULL,
     descripcion TEXT,
     idPermiso INT,
+    activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (idPermiso) REFERENCES Permisos(idPermiso)
 );
 
 -- Crear tabla Usuario
 CREATE TABLE IF NOT EXISTS Usuario (
     idUsuario INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(20) NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
-    estado BOOLEAN,
+    activo BOOLEAN DEFAULT TRUE,
     idRol INT,
     fechaRegistro DATE,
+    ultimoAcceso DATE,
     FOREIGN KEY (idRol) REFERENCES Rol(idRol)
-);
-
--- Crear tabla Persona
-CREATE TABLE IF NOT EXISTS Persona (
-    idPersona INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
-    apellido VARCHAR(50),
-    telefono VARCHAR(50),
-    email VARCHAR(50),
-    tipo ENUM('cliente', 'empleado') NOT NULL,
-    idUsuario INT,
-    fechaRegistro DATE,
-    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
 );
 
 -- Crear tabla Cliente
 CREATE TABLE IF NOT EXISTS Cliente (
-    idCliente INT PRIMARY KEY,
-    FOREIGN KEY (idCliente) REFERENCES Persona(idPersona)
+    idCliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    telefono VARCHAR(50),
+    email VARCHAR(50),
+    idUsuario INT,
+    fechaRegistro DATE,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
 );
 
 -- Crear tabla Empleado
 CREATE TABLE IF NOT EXISTS Empleado (
-    idEmpleado INT PRIMARY KEY,
-    FOREIGN KEY (idEmpleado) REFERENCES Persona(idPersona)
+    idEmpleado INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    dni VARCHAR(8),
+    telefono VARCHAR(50),
+    email VARCHAR(50),
+    direccion VARCHAR(100),
+    salario DECIMAL(10,2),
+    idUsuario INT,
+    fechaRegistro DATE,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
 );
 
 -- Crear tabla TipoDeporte
 CREATE TABLE IF NOT EXISTS TipoDeporte (
     idTipoDeporte INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(20),
+    activo BOOLEAN DEFAULT TRUE,
     descripcion TEXT
 );
 
@@ -69,6 +73,7 @@ CREATE TABLE IF NOT EXISTS CampoDeportivo (
     idTipoDeporte INT,
     estado VARCHAR(20),
     disponible BOOLEAN,
+    activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (idTipoDeporte) REFERENCES TipoDeporte(idTipoDeporte)
 );
 
@@ -79,25 +84,37 @@ CREATE TABLE IF NOT EXISTS ImplementoDeportivo (
     descripcion TEXT,
     precioAlquiler DECIMAL(10,2),
     estado VARCHAR(20),
+    activo BOOLEAN DEFAULT TRUE,
     fechaRegistro DATE
+);
+
+-- Crear tabla EstadoReserva
+CREATE TABLE IF NOT EXISTS EstadoReserva (
+    idEstado INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL,
+    descripcion TEXT
 );
 
 -- Crear tabla Reserva
 CREATE TABLE IF NOT EXISTS Reserva (
     idReserva INT AUTO_INCREMENT PRIMARY KEY,
     idCampo INT,
-    idPersonaCliente INT,
-    idPersonaEmpleado INT,
+    idCliente INT,
+    idEmpleado INT,
     detalle TEXT,
     fechaEntrada DATETIME,
     fechaSalida DATETIME,
     duracion INT,
     precioTotal DECIMAL(10,2),
-    estado VARCHAR(20),
+    idEstado INT NOT NULL,
+    activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (idCampo) REFERENCES CampoDeportivo(idCampo),
-    FOREIGN KEY (idPersonaCliente) REFERENCES Cliente(idCliente),
-    FOREIGN KEY (idPersonaEmpleado) REFERENCES Empleado(idEmpleado)
+    FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
+    FOREIGN KEY (idEmpleado) REFERENCES Empleado(idEmpleado),
+    FOREIGN KEY (idEstado) REFERENCES EstadoReserva(idEstado)
 );
+
+
 
 -- Crear tabla ImplementoDeportivo_Reserva
 CREATE TABLE IF NOT EXISTS ImplementoDeportivo_Reserva (
@@ -113,8 +130,13 @@ CREATE TABLE IF NOT EXISTS ImplementoDeportivo_Reserva (
 -- Crear tabla MetodoPago
 CREATE TABLE IF NOT EXISTS MetodoPago (
     idMetodoPago INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(20),
-    descripcion TEXT
+    nombre VARCHAR(20) NOT NULL,
+    notas TEXT,
+    codigo VARCHAR(10),
+    tarifa_adicional DECIMAL(10,2),
+    disponible BOOLEAN DEFAULT TRUE,
+    url_integracion VARCHAR(255),
+    activo BOOLEAN DEFAULT TRUE
 );
 
 -- Crear tabla Pagos
@@ -130,24 +152,42 @@ CREATE TABLE IF NOT EXISTS Pagos (
 );
 
 -- Insertar datos iniciales
--- Crear Rol de Administrador
+-- Crear Rol de Administrador, Cliente y Empleado
 INSERT INTO Rol (nombre, descripcion) VALUES ('admin', 'Administrador del sistema');
+INSERT INTO Rol (nombre, descripcion) VALUES ('cliente', 'Cliente del sistema');
+INSERT INTO Rol (nombre, descripcion) VALUES ('empleado', 'Empleado del sistema');
 
 -- Registrar Usuario Administrador
-INSERT INTO Usuario (usuario, contrasena, estado, idRol, fechaRegistro) 
-VALUES ('admin_user', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 1, 
+INSERT INTO Usuario (contrasena, activo, idRol, fechaRegistro) 
+VALUES ('a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', TRUE, 
     (SELECT idRol FROM Rol WHERE nombre='admin'), CURDATE());  /* PASS 123 */
 
--- Registrar Persona Administrador
-INSERT INTO Persona (nombre, apellido, telefono, email, tipo, idUsuario, fechaRegistro) 
-VALUES ('NombreAdmin', 'ApellidoAdmin', '1234567890', 'admin@example.com', 'empleado', 
-    (SELECT idUsuario FROM Usuario WHERE usuario='admin_user'), CURDATE());
-
 -- Registrar Empleado Administrador
-INSERT INTO Empleado (idEmpleado) 
-VALUES ((SELECT idPersona FROM Persona WHERE email='admin@example.com'));
+INSERT INTO Empleado (nombre, apellido, dni, telefono, email, direccion, salario, activo, idUsuario, fechaRegistro) 
+VALUES ('NombreAdmin', 'ApellidoAdmin', '12345678', '1234567890', 'admin@example.com', 'DireccionAdmin', 5000.00, TRUE, 1, CURDATE());
 
--- Crear Trigger para Prevenir Eliminación del Empleado Administrador
+-- Insertar Métodos de Pago
+INSERT INTO MetodoPago (nombre, notas, codigo, tarifa_adicional, disponible, url_integracion, activo) 
+VALUES ('Efectivo', 'Pago en efectivo', 'EFT', 0.00, TRUE, NULL, TRUE);
+
+INSERT INTO MetodoPago (nombre, notas, codigo, tarifa_adicional, disponible, url_integracion, activo) 
+VALUES ('Yape', 'Pago a través de Yape', 'YP', 0.00, TRUE, 'https://www.yape.com/api', TRUE);
+
+-- Insertar Tipo de Deporte
+INSERT INTO TipoDeporte (nombre, descripcion) VALUES ('Fútbol', 'Deporte de Fútbol');
+
+-- Insertar los Estados Iniciales
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Pendiente', 'Reserva pendiente de confirmación');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Confirmada', 'Reserva confirmada');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('En Proceso', 'Reserva en proceso');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Completada', 'Reserva completada');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Concluida', 'Reserva concluida');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('No Show', 'Cliente no se presentó');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Pagada', 'Reserva pagada');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('En Disputa', 'Reserva en disputa');
+INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Reembolsada', 'Reserva reembolsada');
+
+-- Crear Triggers para Prevenir Eliminación del Empleado Administrador
 DELIMITER //
 
 CREATE TRIGGER prevent_admin_employee_deletion
@@ -161,7 +201,7 @@ BEGIN
     SET adminRoleId = (SELECT idRol FROM Rol WHERE nombre = 'admin');
 
     -- Obtener el id del rol del usuario asociado al empleado
-    SET userRoleId = (SELECT idRol FROM Usuario WHERE idUsuario = (SELECT idUsuario FROM Persona WHERE idPersona = OLD.idEmpleado));
+    SET userRoleId = (SELECT idRol FROM Usuario WHERE idUsuario = OLD.idUsuario);
 
     -- Verificar si el rol del usuario es administrador
     IF userRoleId = adminRoleId THEN
@@ -170,3 +210,6 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+

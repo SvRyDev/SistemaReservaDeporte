@@ -29,6 +29,7 @@
   row-gap: 20px;
   width: 500px;
   padding: 30px 15px ;
+  box-shadow: 0 0 5px;
   background-color: aliceblue;
 }
 
