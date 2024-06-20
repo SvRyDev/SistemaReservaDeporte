@@ -10,6 +10,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Considerar Solapamiento</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
             <td><?php echo $state->idEstado; ?></td>
             <td><?php echo $state->nombre; ?></td>
             <td><?php echo $state->descripcion; ?></td>
+            <td><?php echo $state->considerar_solapamiento ? 'Sí' : 'No'; ?></td>
             <td>
                 <a href="<?php echo APP_URL; ?>/state/edit/<?php echo $state->idEstado; ?>">Editar</a>
                 <a href="<?php echo APP_URL; ?>/state/delete/<?php echo $state->idEstado; ?>">Eliminar</a>

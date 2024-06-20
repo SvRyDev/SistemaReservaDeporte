@@ -28,9 +28,10 @@ class StateController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
+            $considerar_solapamiento = isset($_POST['considerar_solapamiento']) ? 1 : 0;
 
             $stateModel = $this->model('StateModel');
-            $stateModel->createState($nombre, $descripcion);
+            $stateModel->createState($nombre, $descripcion, $considerar_solapamiento);
 
             header("Location: " . APP_URL . "/state");
             exit();
@@ -54,9 +55,10 @@ class StateController extends Controller {
             $idEstado = $_POST['idEstado'];
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
+            $considerar_solapamiento = isset($_POST['considerar_solapamiento']) ? 1 : 0;
 
             $stateModel = $this->model('StateModel');
-            $stateModel->updateState($idEstado, $nombre, $descripcion);
+            $stateModel->updateState($idEstado, $nombre, $descripcion, $considerar_solapamiento);
 
             header("Location: " . APP_URL . "/state");
             exit();

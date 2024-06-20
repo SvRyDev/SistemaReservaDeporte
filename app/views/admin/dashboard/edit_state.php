@@ -10,6 +10,9 @@
     <label for="descripcion">Descripción:</label>
     <textarea name="descripcion" id="descripcion" required><?php echo $data['state']->descripcion; ?></textarea>
     <br>
+    <label for="considerar_solapamiento">Considerar Solapamiento:</label>
+    <input type="checkbox" name="considerar_solapamiento" id="considerar_solapamiento" <?php echo $data['state']->considerar_solapamiento ? 'checked' : ''; ?>>
+    <br>
     <button type="submit">Actualizar Estado</button>
 </form>
 

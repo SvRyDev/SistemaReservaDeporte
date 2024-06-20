@@ -9,6 +9,9 @@
     <label for="descripcion">Descripción:</label>
     <textarea name="descripcion" id="descripcion" required></textarea>
     <br>
+    <label for="considerar_solapamiento">Considerar Solapamiento:</label>
+    <input type="checkbox" name="considerar_solapamiento" id="considerar_solapamiento">
+    <br>
     <button type="submit">Agregar Estado</button>
 </form>
 

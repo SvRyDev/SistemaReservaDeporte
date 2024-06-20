@@ -92,7 +92,8 @@ CREATE TABLE IF NOT EXISTS ImplementoDeportivo (
 CREATE TABLE IF NOT EXISTS EstadoReserva (
     idEstado INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(20) NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    considerar_solapamiento BOOLEAN DEFAULT FALSE
 );
 
 -- Crear tabla Reserva
@@ -107,6 +108,7 @@ CREATE TABLE IF NOT EXISTS Reserva (
     duracion INT,
     precioTotal DECIMAL(10,2),
     idEstado INT NOT NULL,
+    estado_pago ENUM('pendiente', 'completado', 'parcial') DEFAULT 'pendiente',
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (idCampo) REFERENCES CampoDeportivo(idCampo),
     FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
@@ -177,15 +179,15 @@ VALUES ('Yape', 'Pago a través de Yape', 'YP', 0.00, TRUE, 'https://www.yape.co
 INSERT INTO TipoDeporte (nombre, descripcion) VALUES ('Fútbol', 'Deporte de Fútbol');
 
 -- Insertar los Estados Iniciales
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Pendiente', 'Reserva pendiente de confirmación');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Confirmada', 'Reserva confirmada');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('En Proceso', 'Reserva en proceso');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Completada', 'Reserva completada');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Concluida', 'Reserva concluida');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('No Show', 'Cliente no se presentó');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Pagada', 'Reserva pagada');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('En Disputa', 'Reserva en disputa');
-INSERT INTO EstadoReserva (nombre, descripcion) VALUES ('Reembolsada', 'Reserva reembolsada');
+INSERT INTO EstadoReserva (nombre, descripcion, considerar_solapamiento) VALUES 
+('Pendiente', 'Reserva pendiente de confirmación', TRUE),
+('Confirmada', 'Reserva confirmada', TRUE),
+('En Proceso', 'Reserva en proceso', TRUE),
+('Completada', 'Reserva completada', FALSE),
+('Concluida', 'Reserva finalizada', FALSE),
+('Anulada', 'Reserva cancelada', FALSE),
+('No Show', 'Cliente no se presentó', FALSE),
+('Reembolsada', 'Reserva reembolsada', FALSE);
 
 -- Crear Triggers para Prevenir Eliminación del Empleado Administrador
 DELIMITER //

@@ -1,5 +1,6 @@
 <?php
 class ReservationModel extends Model {
+    // Método existente para obtener todas las reservas
     public function getAllReservations() {
         $stmt = $this->db->prepare("SELECT Reserva.*, CampoDeportivo.codigo AS campo_codigo, Cliente.nombre AS cliente_nombre, Empleado.nombre AS empleado_nombre, EstadoReserva.nombre AS estado_nombre
                                     FROM Reserva
@@ -12,16 +13,39 @@ class ReservationModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function getReservationById($idReserva) {
-        $stmt = $this->db->prepare("SELECT * FROM Reserva WHERE idReserva = :idReserva AND activo = TRUE");
+    // Método para obtener los pagos asociados a una reserva
+    public function getPaymentsByReservation($idReserva) {
+        $stmt = $this->db->prepare("SELECT Pagos.*, MetodoPago.nombre AS metodo_nombre 
+                                    FROM Pagos
+                                    JOIN MetodoPago ON Pagos.idMetodoPago = MetodoPago.idMetodoPago
+                                    WHERE Pagos.idReserva = :idReserva");
         $stmt->bindParam(':idReserva', $idReserva);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function createReservation($idCampo, $idCliente, $idEmpleado, $detalle, $fechaEntrada, $fechaSalida, $duracion, $precioTotal, $idEstado) {
-        $stmt = $this->db->prepare("INSERT INTO Reserva (idCampo, idCliente, idEmpleado, detalle, fechaEntrada, fechaSalida, duracion, precioTotal, idEstado, activo) 
-                                    VALUES (:idCampo, :idCliente, :idEmpleado, :detalle, :fechaEntrada, :fechaSalida, :duracion, :precioTotal, :idEstado, TRUE)");
+    // Método para verificar si hay solapamiento de reservas
+    public function isOverlappingReservation($idCampo, $fechaEntrada, $fechaSalida, $idReserva = null) {
+        $query = "SELECT COUNT(*) FROM Reserva WHERE idCampo = :idCampo AND (fechaEntrada < :fechaSalida AND fechaSalida > :fechaEntrada) AND idEstado IN (SELECT idEstado FROM EstadoReserva WHERE considerar_solapamiento = 1)";
+        if ($idReserva !== null) {
+            $query .= " AND idReserva != :idReserva";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idCampo', $idCampo);
+        $stmt->bindParam(':fechaEntrada', $fechaEntrada);
+        $stmt->bindParam(':fechaSalida', $fechaSalida);
+        if ($idReserva !== null) {
+            $stmt->bindParam(':idReserva', $idReserva);
+        }
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
+    // Método para crear una nueva reserva
+    public function createReservation($idCampo, $idCliente, $idEmpleado, $detalle, $fechaEntrada, $fechaSalida, $duracion, $precioTotal, $idEstado, $estadoPago) {
+        $stmt = $this->db->prepare("INSERT INTO Reserva (idCampo, idCliente, idEmpleado, detalle, fechaEntrada, fechaSalida, duracion, precioTotal, idEstado, estado_pago, activo) 
+                                    VALUES (:idCampo, :idCliente, :idEmpleado, :detalle, :fechaEntrada, :fechaSalida, :duracion, :precioTotal, :idEstado, :estado_pago, TRUE)");
         $stmt->bindParam(':idCampo', $idCampo);
         $stmt->bindParam(':idCliente', $idCliente);
         $stmt->bindParam(':idEmpleado', $idEmpleado);
@@ -31,12 +55,38 @@ class ReservationModel extends Model {
         $stmt->bindParam(':duracion', $duracion);
         $stmt->bindParam(':precioTotal', $precioTotal);
         $stmt->bindParam(':idEstado', $idEstado);
+        $stmt->bindParam(':estado_pago', $estadoPago);
         $stmt->execute();
         return $this->db->lastInsertId();
     }
 
-    public function updateReservation($idReserva, $idCampo, $idCliente, $idEmpleado, $detalle, $fechaEntrada, $fechaSalida, $duracion, $precioTotal, $idEstado) {
-        $stmt = $this->db->prepare("UPDATE Reserva SET idCampo = :idCampo, idCliente = :idCliente, idEmpleado = :idEmpleado, detalle = :detalle, fechaEntrada = :fechaEntrada, fechaSalida = :fechaSalida, duracion = :duracion, precioTotal = :precioTotal, idEstado = :idEstado 
+    // Método para asociar implementos deportivos a una reserva
+    public function addSportEquipmentsToReservation($idReserva, $implementos) {
+        foreach ($implementos as $implemento) {
+            $stmt = $this->db->prepare("INSERT INTO ImplementoDeportivo_Reserva (idImplemento, idReserva, Cantidad, PrecioTotal) 
+                                        VALUES (:idImplemento, :idReserva, :Cantidad, :PrecioTotal)");
+            $stmt->bindParam(':idImplemento', $implemento['idImplemento']);
+            $stmt->bindParam(':idReserva', $idReserva);
+            $stmt->bindParam(':Cantidad', $implemento['Cantidad']);
+            $stmt->bindParam(':PrecioTotal', $implemento['PrecioTotal']);
+            $stmt->execute();
+        }
+    }
+
+    // Método para obtener los implementos deportivos asociados a una reserva
+    public function getSportEquipmentsByReservation($idReserva) {
+        $stmt = $this->db->prepare("SELECT ImplementoDeportivo_Reserva.*, ImplementoDeportivo.nombre 
+                                    FROM ImplementoDeportivo_Reserva
+                                    JOIN ImplementoDeportivo ON ImplementoDeportivo_Reserva.idImplemento = ImplementoDeportivo.idImplemento
+                                    WHERE idReserva = :idReserva");
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    // Método existente para actualizar una reserva
+    public function updateReservation($idReserva, $idCampo, $idCliente, $idEmpleado, $detalle, $fechaEntrada, $fechaSalida, $duracion, $precioTotal) {
+        $stmt = $this->db->prepare("UPDATE Reserva SET idCampo = :idCampo, idCliente = :idCliente, idEmpleado = :idEmpleado, detalle = :detalle, fechaEntrada = :fechaEntrada, fechaSalida = :fechaSalida, duracion = :duracion, precioTotal = :precioTotal
                                     WHERE idReserva = :idReserva AND activo = TRUE");
         $stmt->bindParam(':idCampo', $idCampo);
         $stmt->bindParam(':idCliente', $idCliente);
@@ -46,15 +96,62 @@ class ReservationModel extends Model {
         $stmt->bindParam(':fechaSalida', $fechaSalida);
         $stmt->bindParam(':duracion', $duracion);
         $stmt->bindParam(':precioTotal', $precioTotal);
-        $stmt->bindParam(':idEstado', $idEstado);
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+    }
+
+    // Método para eliminar implementos deportivos de una reserva
+    public function deleteSportEquipmentsFromReservation($idReserva) {
+        $stmt = $this->db->prepare("DELETE FROM ImplementoDeportivo_Reserva WHERE idReserva = :idReserva");
         $stmt->bindParam(':idReserva', $idReserva);
         $stmt->execute();
     }
 
     public function deleteReservation($idReserva) {
-        $stmt = $this->db->prepare("UPDATE Reserva SET activo = FALSE WHERE idReserva = :idReserva");
+        // Eliminar implementos deportivos asociados
+        $this->deleteSportEquipmentsFromReservation($idReserva);
+
+        // Eliminar pagos asociados
+        $stmt = $this->db->prepare("DELETE FROM Pagos WHERE idReserva = :idReserva");
         $stmt->bindParam(':idReserva', $idReserva);
         $stmt->execute();
+
+        // Eliminar reserva
+        $stmt = $this->db->prepare("DELETE FROM Reserva WHERE idReserva = :idReserva");
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+    }
+
+    public function getReservationById($idReserva) {
+        $stmt = $this->db->prepare("SELECT r.*, c.nombre AS cliente_nombre FROM Reserva r, Cliente c WHERE c.idCliente = r.idCliente AND idReserva = :idReserva AND r.activo = TRUE");
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function updateReservationPaymentState($idReserva, $estadoPago) {
+        $stmt = $this->db->prepare("UPDATE Reserva SET estado_pago = :estado_pago WHERE idReserva = :idReserva");
+        $stmt->bindParam(':estado_pago', $estadoPago);
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+    }
+
+    public function updateReservationState($idReserva, $idEstado) {
+        $stmt = $this->db->prepare("UPDATE Reserva SET idEstado = :idEstado WHERE idReserva = :idReserva");
+        $stmt->bindParam(':idEstado', $idEstado);
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+    }
+
+
+    public function getReservationDetails($idReserva) {
+        $stmt = $this->db->prepare("SELECT Reserva.idReserva, Cliente.nombre AS cliente_nombre, Reserva.fechaEntrada
+                                    FROM Reserva
+                                    JOIN Cliente ON Reserva.idCliente = Cliente.idCliente
+                                    WHERE Reserva.idReserva = :idReserva");
+        $stmt->bindParam(':idReserva', $idReserva);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 }
 ?>

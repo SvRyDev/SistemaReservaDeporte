@@ -11,12 +11,12 @@
             <th>Campo</th>
             <th>Cliente</th>
             <th>Empleado</th>
-            <th>Detalle</th>
             <th>Fecha Entrada</th>
             <th>Fecha Salida</th>
             <th>Duración</th>
             <th>Precio Total</th>
             <th>Estado</th>
+            <th>Estado de Pago</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -27,15 +27,18 @@
             <td><?php echo $reservation->campo_codigo; ?></td>
             <td><?php echo $reservation->cliente_nombre; ?></td>
             <td><?php echo $reservation->empleado_nombre; ?></td>
-            <td><?php echo $reservation->detalle; ?></td>
             <td><?php echo $reservation->fechaEntrada; ?></td>
             <td><?php echo $reservation->fechaSalida; ?></td>
             <td><?php echo $reservation->duracion; ?></td>
             <td><?php echo $reservation->precioTotal; ?></td>
             <td><?php echo $reservation->estado_nombre; ?></td>
+            <td><?php echo ucfirst($reservation->estado_pago); ?></td>
             <td>
                 <a href="<?php echo APP_URL; ?>/reservations/edit/<?php echo $reservation->idReserva; ?>">Editar</a>
                 <a href="<?php echo APP_URL; ?>/reservations/delete/<?php echo $reservation->idReserva; ?>">Eliminar</a>
+                <a href="<?php echo APP_URL; ?>/payments/create/<?php echo $reservation->idReserva; ?>">Realizar Pago</a>
+                <a href="<?php echo APP_URL; ?>/reservations/updateState/<?php echo $reservation->idReserva; ?>">Actualizar Estado</a>
+                <a href="<?php echo APP_URL; ?>/reservations/viewPayments/<?php echo $reservation->idReserva; ?>">Ver Pagos</a>
             </td>
         </tr>
         <?php endforeach; ?>
