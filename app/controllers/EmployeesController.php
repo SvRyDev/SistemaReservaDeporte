@@ -10,7 +10,9 @@ class EmployeesController extends Controller {
 
         $data = [
             'title' => 'Gestionar Empleados',
-            'employees' => $employees
+            'short_title' => 'Empleados',
+            'employees' => $employees,
+            'icon_page' => '<i class="fas fa-users"> </i>'
         ];
 
         $this->view('admin.dashboard.manage_employee', $data);
@@ -22,6 +24,8 @@ class EmployeesController extends Controller {
 
         $data = [
             'title' => 'Agregar Empleado',
+            'short_title' => 'Nuevo Empleado',
+            'icon_page' => '<i class="fas fa-user-plus"></i>',
             'roles' => $roles
         ];
 
@@ -61,8 +65,10 @@ class EmployeesController extends Controller {
         $roles = $userModel->getAllRolesExceptClient();
 
         $data = [
-            'title' => 'Editar Empleado',
+            'title' => 'Actualizar Empleado',
+            'short_title' => 'Editar Empleado',
             'employee' => $employee,
+            'icon_page' => '<i class="fas fa-user-plus"></i>',
             'roles' => $roles
         ];
 
