@@ -10,7 +10,12 @@ class ClientsController extends Controller {
 
         $data = [
             'title' => 'Gestionar Clientes',
-            'clients' => $clients
+            'clients' => $clients,
+            'icon_page' => '<i class="mdi mdi-account"></i>',
+            'short_title' => 'Cliente',
+            'module' => 'clients',
+            'singular' => 'Cliente',
+
         ];
 
         $this->view('admin.dashboard.manage_client', $data);

@@ -9,6 +9,12 @@ class ClientModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getCountClients() {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM Cliente WHERE activo = TRUE");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     public function getClientById($idCliente) {
         $stmt = $this->db->prepare("SELECT * FROM Cliente WHERE idCliente = :idCliente AND activo = TRUE");
         $stmt->bindParam(':idCliente', $idCliente);

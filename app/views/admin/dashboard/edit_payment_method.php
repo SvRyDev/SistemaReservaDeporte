@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php require_once __DIR__ . '/templates/header.php'; ?>
 
 <h1><?php echo isset($data['title']) ? $data['title'] : 'Editar Método de Pago'; ?></h1>
 
@@ -25,4 +25,4 @@
     <button type="submit">Actualizar Método de Pago</button>
 </form>
 
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php require_once __DIR__ . '/templates/footer.php'; ?>

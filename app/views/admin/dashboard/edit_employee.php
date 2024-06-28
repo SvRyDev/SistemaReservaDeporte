@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php require_once __DIR__ . '/templates/header.php'; ?>
 
 
 <div class="page-breadcrumb">
@@ -192,4 +192,4 @@
     <button type="submit">Actualizar</button>
 </form>
 
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php require_once __DIR__ . '/templates/footer.php'; ?>

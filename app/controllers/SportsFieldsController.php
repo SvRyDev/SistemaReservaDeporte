@@ -1,22 +1,30 @@
 <?php
-class SportsFieldsController extends Controller {
-    public function __construct() {
+class SportsFieldsController extends Controller
+{
+    public function __construct()
+    {
         $this->checkEmployeeOrAdmin(); // Verifica si el usuario es empleado o administrador
     }
 
-    public function index() {
+    public function index()
+    {
         $sportsFieldModel = $this->model('SportsFieldModel');
         $fields = $sportsFieldModel->getAllFields();
 
         $data = [
             'title' => 'Gestionar Campos Deportivos',
-            'fields' => $fields
+            'fields' => $fields,
+            'icon_page' => '<i class="mdi mdi-stadium"></i>',
+            'short_title' => 'Campos Deportivos',
+            'module' => 'SportsFields',
+            'singular' => 'Campo Deportivo',
         ];
 
         $this->view('admin.dashboard.manage_sports_fields', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         $sportModel = $this->model('SportModel');
         $sports = $sportModel->getAllSports();
 
@@ -28,7 +36,8 @@ class SportsFieldsController extends Controller {
         $this->view('admin.dashboard.add_sports_field', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $codigo = $_POST['codigo'];
             $alquilerHora = $_POST['alquilerHora'];
@@ -44,7 +53,8 @@ class SportsFieldsController extends Controller {
         }
     }
 
-    public function edit($idCampo) {
+    public function edit($idCampo)
+    {
         $sportsFieldModel = $this->model('SportsFieldModel');
         $field = $sportsFieldModel->getFieldById($idCampo);
 
@@ -60,7 +70,8 @@ class SportsFieldsController extends Controller {
         $this->view('admin.dashboard.edit_sports_field', $data);
     }
 
-    public function update() {
+    public function update()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idCampo = $_POST['idCampo'];
             $codigo = $_POST['codigo'];
@@ -77,7 +88,8 @@ class SportsFieldsController extends Controller {
         }
     }
 
-    public function delete($idCampo) {
+    public function delete($idCampo)
+    {
         $sportsFieldModel = $this->model('SportsFieldModel');
         $sportsFieldModel->deleteField($idCampo);
 
@@ -85,4 +97,3 @@ class SportsFieldsController extends Controller {
         exit();
     }
 }
-?>

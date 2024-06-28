@@ -16,6 +16,13 @@ class SportsFieldModel extends Model {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public function getFieldBySportId($idSport) {
+        $stmt = $this->db->prepare("SELECT * FROM CampoDeportivo WHERE idTipoDeporte = :idSports AND activo = TRUE");
+        $stmt->bindParam(':idSports', $idSport);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function createField($codigo, $alquilerHora, $idTipoDeporte, $estado, $disponible) {
         $stmt = $this->db->prepare("INSERT INTO CampoDeportivo (codigo, alquilerHora, idTipoDeporte, estado, disponible, activo) 
                                     VALUES (:codigo, :alquilerHora, :idTipoDeporte, :estado, :disponible, TRUE)");

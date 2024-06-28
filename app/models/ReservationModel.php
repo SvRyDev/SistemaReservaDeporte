@@ -2,13 +2,27 @@
 class ReservationModel extends Model {
     // Método existente para obtener todas las reservas
     public function getAllReservations() {
-        $stmt = $this->db->prepare("SELECT Reserva.*, CampoDeportivo.codigo AS campo_codigo, Cliente.nombre AS cliente_nombre, Empleado.nombre AS empleado_nombre, EstadoReserva.nombre AS estado_nombre
+        $stmt = $this->db->prepare("SELECT Reserva.*, CampoDeportivo.codigo AS campo_codigo, Cliente.nombre AS cliente_nombre, Empleado.nombre AS empleado_nombre, EstadoReserva.nombre AS estado_nombre, EstadoReserva.color AS estado_color
                                     FROM Reserva
                                     JOIN CampoDeportivo ON Reserva.idCampo = CampoDeportivo.idCampo
                                     JOIN Cliente ON Reserva.idCliente = Cliente.idCliente
                                     JOIN Empleado ON Reserva.idEmpleado = Empleado.idEmpleado
                                     JOIN EstadoReserva ON Reserva.idEstado = EstadoReserva.idEstado
                                     WHERE Reserva.activo = TRUE");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getReservationsByField($idCampo) {
+        $stmt = $this->db->prepare("SELECT Reserva.*, CampoDeportivo.codigo AS campo_codigo, Cliente.nombre AS cliente_nombre, Empleado.nombre AS empleado_nombre, EstadoReserva.nombre AS estado_nombre, EstadoReserva.color AS estado_color
+                                    FROM Reserva
+                                    JOIN CampoDeportivo ON Reserva.idCampo = CampoDeportivo.idCampo
+                                    JOIN Cliente ON Reserva.idCliente = Cliente.idCliente
+                                    JOIN Empleado ON Reserva.idEmpleado = Empleado.idEmpleado
+                                    JOIN EstadoReserva ON Reserva.idEstado = EstadoReserva.idEstado
+                                    WHERE Reserva.activo = TRUE
+                                    AND CampoDeportivo.idCampo = :idCampo");
+        $stmt->bindParam(':idCampo', $idCampo, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }

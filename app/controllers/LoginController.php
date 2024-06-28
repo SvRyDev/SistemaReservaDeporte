@@ -1,19 +1,23 @@
 <?php
-class LoginController extends Controller {
-    public function index() {
+class LoginController extends Controller
+{
+    public function index()
+    {
         $data = [
             'title' => 'Login'
         ];
         $this->view('client/auth/login', $data);
     }
 
-    public function authenticate() {
+    public function authenticate()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = $_POST['email'];
             $password = hash('sha256', $_POST['password']);
 
             $userModel = $this->model('UserModel');
             $user = $userModel->findUserByEmail($email);
+            echo ('<script>console.log( ' . $password . ');</script>');
 
             if ($user && hash_equals($password, $user->contrasena)) {
                 // Usuario autenticado correctamente
@@ -25,10 +29,13 @@ class LoginController extends Controller {
                 // Establecer el correo electrónico y el nombre en la sesión
                 if (isset($user->cliente_email)) {
                     $_SESSION['user_email'] = $user->cliente_email;
+                    $_SESSION['user_phone'] = $user->cliente_telefono;
                     $_SESSION['user_name'] = $user->cliente_nombre; // Asumiendo que el nombre está en el campo `nombre`
                 } elseif (isset($user->empleado_email)) {
                     $_SESSION['user_email'] = $user->empleado_email;
+                    $_SESSION['user_phone'] = $user->empleado_telefono;
                     $_SESSION['user_name'] = $user->empleado_nombre; // Asumiendo que el nombre está en el campo `nombre`
+
                 }
 
                 header("Location: " . APP_URL);
@@ -47,7 +54,8 @@ class LoginController extends Controller {
         }
     }
 
-    public function logout() {
+    public function logout()
+    {
         session_start();
         session_unset();
         session_destroy();
@@ -55,4 +63,3 @@ class LoginController extends Controller {
         exit();
     }
 }
-?>

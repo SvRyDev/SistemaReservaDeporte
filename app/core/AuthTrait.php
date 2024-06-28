@@ -23,5 +23,21 @@ trait AuthTrait {
             exit();
         }
     }
+
+
+    protected function checkClient(){
+        $this->checkLogin();
+        $userModel = $this->model('UserModel');
+        $userId = $_SESSION['user_id'];
+        $userRole = $_SESSION['user_role'];
+
+        $isClient = $userModel->isClient($userId);
+
+        if (!$isClient && $userRole !== 'cliente') {
+            header("Location: " . APP_URL);
+            exit();
+        }
+
+    }
 }
 ?>

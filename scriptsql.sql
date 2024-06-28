@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS EstadoReserva (
     idEstado INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(20) NOT NULL,
     descripcion TEXT,
+    color VARCHAR(7) NOT NULL DEFAULT '#000000',
     considerar_solapamiento BOOLEAN DEFAULT FALSE
 );
 
@@ -179,15 +180,16 @@ VALUES ('Yape', 'Pago a través de Yape', 'YP', 0.00, TRUE, 'https://www.yape.co
 INSERT INTO TipoDeporte (nombre, descripcion) VALUES ('Fútbol', 'Deporte de Fútbol');
 
 -- Insertar los Estados Iniciales
-INSERT INTO EstadoReserva (nombre, descripcion, considerar_solapamiento) VALUES 
-('Pendiente', 'Reserva pendiente de confirmación', TRUE),
-('Confirmada', 'Reserva confirmada', TRUE),
-('En Proceso', 'Reserva en proceso', TRUE),
-('Completada', 'Reserva completada', FALSE),
-('Concluida', 'Reserva finalizada', FALSE),
-('Anulada', 'Reserva cancelada', FALSE),
-('No Show', 'Cliente no se presentó', FALSE),
-('Reembolsada', 'Reserva reembolsada', FALSE);
+INSERT INTO EstadoReserva (nombre, descripcion, considerar_solapamiento, color) VALUES 
+('Pendiente', 'Reserva pendiente de confirmación', TRUE, '#87CEFA'),
+('Confirmada', 'Reserva confirmada', TRUE, '#1E90FF'),
+('En Proceso', 'Reserva en proceso', TRUE, '#32CD32'),
+('Completada', 'Reserva completada', FALSE, '#FFD700'),
+('Concluida', 'Reserva finalizada', FALSE, '#FFA500'),
+('Anulada', 'Reserva cancelada', FALSE, '#FF4500'),
+('No Show', 'Cliente no se presentó', FALSE, '#FAF0E6'),
+('Reembolsada', 'Reserva reembolsada', FALSE, '#FF7F50');
+
 
 -- Crear Triggers para Prevenir Eliminación del Empleado Administrador
 DELIMITER //

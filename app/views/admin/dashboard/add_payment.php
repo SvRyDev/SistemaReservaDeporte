@@ -1,17 +1,17 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php require_once __DIR__ . '/templates/header.php'; ?>
 
 <h1><?php echo isset($data['title']) ? $data['title'] : 'Realizar Pago'; ?></h1>
 
 <form action="<?php echo APP_URL; ?>/payments/store" method="POST">
-    <?php if ($data['from_reservations'] && $data['reservation']): ?>
+    <?php if ($data['from_reservations'] && $data['reservation']) : ?>
         <input type="hidden" name="idReserva" value="<?php echo $data['reservation']->idReserva; ?>">
         <p>Reserva ID: <?php echo $data['reservation']->idReserva; ?></p>
         <p>Cliente: <?php echo $data['reservation']->cliente_nombre; ?></p>
         <p>Fecha de Reserva: <?php echo $data['reservation']->fechaEntrada; ?></p>
-    <?php else: ?>
+    <?php else : ?>
         <label for="idReserva">Reserva:</label>
         <select name="idReserva" id="idReserva" required>
-            <?php foreach ($data['reservations'] as $reservation): ?>
+            <?php foreach ($data['reservations'] as $reservation) : ?>
                 <option value="<?php echo $reservation->idReserva; ?>">
                     <?php echo 'ID: ' . $reservation->idReserva . ' - Cliente: ' . $reservation->cliente_nombre . ' - Fecha: ' . $reservation->fechaEntrada; ?>
                 </option>
@@ -30,7 +30,7 @@
 
     <label for="idMetodoPago">Método de Pago:</label>
     <select name="idMetodoPago" id="idMetodoPago" required>
-        <?php foreach ($data['methods'] as $method): ?>
+        <?php foreach ($data['methods'] as $method) : ?>
             <option value="<?php echo $method->idMetodoPago; ?>"><?php echo $method->nombre; ?></option>
         <?php endforeach; ?>
     </select>
@@ -47,4 +47,4 @@
     <button type="submit">Realizar Pago</button>
 </form>
 
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php require_once __DIR__ . '/templates/footer.php'; ?>

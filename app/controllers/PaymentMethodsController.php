@@ -1,30 +1,40 @@
 <?php
-class PaymentMethodsController extends Controller {
-    public function __construct() {
+class PaymentMethodsController extends Controller
+{
+    public function __construct()
+    {
         $this->checkEmployeeOrAdmin();
     }
 
-    public function index() {
+    public function index()
+    {
         $paymentMethodModel = $this->model('PaymentMethodModel');
         $paymentMethods = $paymentMethodModel->getAllPaymentMethods();
 
         $data = [
             'title' => 'Gestionar Métodos de Pago',
-            'paymentMethods' => $paymentMethods
+            'paymentMethods' => $paymentMethods,
+            'icon_page' => '<i class="mdi mdi-cash"></i>',
+            'short_title' => 'Metodos de Pago',
+            'module' => 'paymentsmethods',
+            'singular' => 'Método de Pago',
         ];
 
         $this->view('admin.dashboard.manage_payment_methods', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         $data = [
             'title' => 'Agregar Método de Pago'
+            
         ];
 
         $this->view('admin.dashboard.add_payment_method', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $notas = $_POST['notas'];
@@ -41,7 +51,8 @@ class PaymentMethodsController extends Controller {
         }
     }
 
-    public function edit($idMetodoPago) {
+    public function edit($idMetodoPago)
+    {
         $paymentMethodModel = $this->model('PaymentMethodModel');
         $paymentMethod = $paymentMethodModel->getPaymentMethodById($idMetodoPago);
 
@@ -53,7 +64,8 @@ class PaymentMethodsController extends Controller {
         $this->view('admin.dashboard.edit_payment_method', $data);
     }
 
-    public function update() {
+    public function update()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idMetodoPago = $_POST['idMetodoPago'];
             $nombre = $_POST['nombre'];
@@ -71,7 +83,8 @@ class PaymentMethodsController extends Controller {
         }
     }
 
-    public function delete($idMetodoPago) {
+    public function delete($idMetodoPago)
+    {
         $paymentMethodModel = $this->model('PaymentMethodModel');
         $paymentMethodModel->deletePaymentMethod($idMetodoPago);
 
@@ -79,4 +92,3 @@ class PaymentMethodsController extends Controller {
         exit();
     }
 }
-?>

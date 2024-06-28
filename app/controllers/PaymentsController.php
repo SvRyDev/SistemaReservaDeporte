@@ -1,22 +1,30 @@
 <?php
-class PaymentsController extends Controller {
-    public function __construct() {
+class PaymentsController extends Controller
+{
+    public function __construct()
+    {
         $this->checkEmployeeOrAdmin(); // Verifica si el usuario es empleado o administrador
     }
 
-    public function index() {
+    public function index()
+    {
         $paymentModel = $this->model('PaymentModel');
         $payments = $paymentModel->getAllPayments();
 
         $data = [
             'title' => 'Gestionar Pagos',
-            'payments' => $payments
+            'payments' => $payments,
+            'icon_page' => '<i class="mdi mdi-credit-card"></i>',
+            'short_title' => 'Pagos',
+            'module' => 'payments',
+            'singular' => 'Pago',
         ];
 
         $this->view('admin.dashboard.manage_payments', $data);
     }
 
-    public function create($idReserva = null) {
+    public function create($idReserva = null)
+    {
         $reservationModel = $this->model('ReservationModel');
         $paymentMethodModel = $this->model('PaymentMethodModel');
 
@@ -39,7 +47,8 @@ class PaymentsController extends Controller {
         $this->view('admin.dashboard.add_payment', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $monto = $_POST['monto'];
             $fechaPago = CURRENT_TIME;
@@ -60,7 +69,8 @@ class PaymentsController extends Controller {
         }
     }
 
-    public function edit($idPago) {
+    public function edit($idPago)
+    {
         $paymentModel = $this->model('PaymentModel');
         $payment = $paymentModel->getPaymentById($idPago);
 
@@ -83,7 +93,8 @@ class PaymentsController extends Controller {
         $this->view('admin.dashboard.edit_payment', $data);
     }
 
-    public function update() {
+    public function update()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idPago = $_POST['idPago'];
             $monto = $_POST['monto'];
@@ -105,7 +116,8 @@ class PaymentsController extends Controller {
         }
     }
 
-    public function delete($idPago) {
+    public function delete($idPago)
+    {
         $paymentModel = $this->model('PaymentModel');
         $paymentModel->deletePayment($idPago);
 
@@ -113,4 +125,3 @@ class PaymentsController extends Controller {
         exit();
     }
 }
-?>

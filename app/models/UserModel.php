@@ -1,11 +1,14 @@
 <?php
 class UserModel extends Model {
     public function findUserByEmail($email) {
-        $stmt = $this->db->prepare("SELECT Usuario.*, Cliente.email AS cliente_email, Empleado.email AS empleado_email, Empleado.nombre AS empleado_nombre, Cliente.nombre AS cliente_nombre
-                                    FROM Usuario
-                                    LEFT JOIN Cliente ON Usuario.idUsuario = Cliente.idUsuario
-                                    LEFT JOIN Empleado ON Usuario.idUsuario = Empleado.idUsuario
-                                    WHERE (Cliente.email = :email OR Empleado.email = :email) AND Usuario.activo = TRUE");
+        $stmt = $this->db->prepare("SELECT Usuario.*, 
+                                   Cliente.email AS cliente_email, Cliente.telefono AS cliente_telefono,
+                                   Empleado.email AS empleado_email, Empleado.nombre AS empleado_nombre, Empleado.telefono AS empleado_telefono,
+                                   Cliente.nombre AS cliente_nombre
+                                   FROM Usuario
+                                   LEFT JOIN Cliente ON Usuario.idUsuario = Cliente.idUsuario
+                                   LEFT JOIN Empleado ON Usuario.idUsuario = Empleado.idUsuario
+                                   WHERE (Cliente.email = :email OR Empleado.email = :email) AND Usuario.activo = TRUE");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -36,6 +39,14 @@ class UserModel extends Model {
 
     public function isEmployee($userId) {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM Empleado WHERE idUsuario = :userId AND activo = TRUE");
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
+    
+    public function isClient($userId) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM Cliente WHERE idUsuario = :userId AND activo = TRUE");
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
         return $stmt->fetchColumn() > 0;

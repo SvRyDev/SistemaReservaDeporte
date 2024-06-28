@@ -1,22 +1,30 @@
 <?php
-class SportsController extends Controller {
-    public function __construct() {
+class SportsController extends Controller
+{
+    public function __construct()
+    {
         $this->checkEmployeeOrAdmin(); // Verifica si el usuario es empleado o administrador
     }
 
-    public function index() {
+    public function index()
+    {
         $sportModel = $this->model('SportModel');
         $sports = $sportModel->getAllSports();
 
         $data = [
             'title' => 'Gestionar Deportes',
-            'sports' => $sports
+            'sports' => $sports,
+            'icon_page' => '<i class="mdi mdi-soccer"></i>',
+            'short_title' => 'Tipo Deportes',
+            'module' => 'sports',
+            'singular' => 'Deporte',
         ];
 
         $this->view('admin.dashboard.manage_sports', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         $data = [
             'title' => 'Agregar Deporte'
         ];
@@ -24,7 +32,8 @@ class SportsController extends Controller {
         $this->view('admin.dashboard.add_sport', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
@@ -37,7 +46,8 @@ class SportsController extends Controller {
         }
     }
 
-    public function edit($idTipoDeporte) {
+    public function edit($idTipoDeporte)
+    {
         $sportModel = $this->model('SportModel');
         $sport = $sportModel->getSportById($idTipoDeporte);
 
@@ -49,7 +59,8 @@ class SportsController extends Controller {
         $this->view('admin.dashboard.edit_sport', $data);
     }
 
-    public function update() {
+    public function update()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idTipoDeporte = $_POST['idTipoDeporte'];
             $nombre = $_POST['nombre'];
@@ -63,7 +74,8 @@ class SportsController extends Controller {
         }
     }
 
-    public function delete($idTipoDeporte) {
+    public function delete($idTipoDeporte)
+    {
         $sportModel = $this->model('SportModel');
         $sportModel->deleteSport($idTipoDeporte);
 
@@ -71,4 +83,3 @@ class SportsController extends Controller {
         exit();
     }
 }
-?>

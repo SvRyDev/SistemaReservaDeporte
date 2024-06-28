@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php require_once __DIR__ . '/templates/header.php'; ?>
 
 <h1><?php echo isset($data['title']) ? $data['title'] : 'Agregar Campo Deportivo'; ?></h1>
 
@@ -25,4 +25,4 @@
     <button type="submit">Agregar Campo Deportivo</button>
 </form>
 
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php require_once __DIR__ . '/templates/footer.php'; ?>

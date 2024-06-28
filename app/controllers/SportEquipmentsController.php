@@ -1,22 +1,30 @@
 <?php
-class SportEquipmentsController extends Controller {
-    public function __construct() {
+class SportEquipmentsController extends Controller
+{
+    public function __construct()
+    {
         $this->checkEmployeeOrAdmin(); // Verifica si el usuario es empleado o administrador
     }
 
-    public function index() {
+    public function index()
+    {
         $equipmentModel = $this->model('SportEquipmentModel');
         $equipments = $equipmentModel->getAllEquipments();
 
         $data = [
             'title' => 'Gestionar Implementos Deportivos',
-            'equipments' => $equipments
+            'equipments' => $equipments,
+            'icon_page' => '<i class="mdi mdi-tennis"></i>',
+            'short_title' => 'Implementos Deportivos',
+            'module' => 'SportEquipments',
+            'singular' => 'Implemento Deportivo',
         ];
 
         $this->view('admin.dashboard.manage_sport_equipments', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         $data = [
             'title' => 'Agregar Implemento Deportivo'
         ];
@@ -24,7 +32,8 @@ class SportEquipmentsController extends Controller {
         $this->view('admin.dashboard.add_sport_equipment', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
@@ -39,7 +48,8 @@ class SportEquipmentsController extends Controller {
         }
     }
 
-    public function edit($idImplemento) {
+    public function edit($idImplemento)
+    {
         $equipmentModel = $this->model('SportEquipmentModel');
         $equipment = $equipmentModel->getEquipmentById($idImplemento);
 
@@ -51,7 +61,8 @@ class SportEquipmentsController extends Controller {
         $this->view('admin.dashboard.edit_sport_equipment', $data);
     }
 
-    public function update() {
+    public function update()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idImplemento = $_POST['idImplemento'];
             $nombre = $_POST['nombre'];
@@ -67,7 +78,8 @@ class SportEquipmentsController extends Controller {
         }
     }
 
-    public function delete($idImplemento) {
+    public function delete($idImplemento)
+    {
         $equipmentModel = $this->model('SportEquipmentModel');
         $equipmentModel->deleteEquipment($idImplemento);
 
@@ -75,4 +87,3 @@ class SportEquipmentsController extends Controller {
         exit();
     }
 }
-?>
