@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/templates/header.php'; ?>
+<?php require_once __DIR__ . '/modals/modal_roles.php'; ?>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -11,9 +12,9 @@
                     <div class="row">
                         <div class="col-lg-6 ">
                             <h5></h5>
-                            <a href="<?php echo APP_URL; ?>/roles/create" class="btn btn-success text-white">
+                            <button type="button" class="btn btn-success text-white mdl-add-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
                                 <i class="fas fa-plus-circle"></i> Nuevo <?= $data['singular']?>
-                            </a>
+                            </button>
                         </div>
 
 

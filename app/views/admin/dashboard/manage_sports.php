@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/templates/header.php'; ?>
-
+<?php require_once __DIR__ . '/modals/modal_sports.php'; ?>
 
 
 <div class="container-fluid">
@@ -13,9 +13,9 @@
                     <div class="row">
                         <div class="col-lg-6 ">
                             <h5></h5>
-                            <a href="<?php echo APP_URL; ?>/sports/create" class="btn btn-success text-white">
-                                <i class="fas fa-plus-circle"></i> Nuevo <?php echo $data['singular']?>
-                            </a>
+                            <button type="button" class="btn btn-success text-white mdl-add-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
+                                <i class="fas fa-plus-circle"></i> Nuevo <?= $data['singular']?>
+                            </button>
                         </div>
 
 
@@ -33,22 +33,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($data['sports'] as $sport) : ?>
-                                    <tr>
-                                        <td><?php echo $sport->idTipoDeporte; ?></td>
-                                        <td><?php echo $sport->nombre; ?></td>
-                                        <td><?php echo $sport->descripcion; ?></td>
-                                        <td>
-                                            <a class="btn btn-warning text-white edit-employee-btn btn-sm" href="<?php echo APP_URL; ?>/sports/edit/<?php echo $sport->idTipoDeporte; ?>">
-                                                <i class="far fa-edit"></i> Editar
-                                            </a>
-                                            <a class="btn btn-danger text-white delete-employee-btn btn-sm" href="<?php echo APP_URL; ?>/sports/delete/<?php echo $sport->idTipoDeporte; ?>">
-                                                <i class="fas fa-trash-alt"></i> Eliminar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-
 
                             </tbody>
                         </table>

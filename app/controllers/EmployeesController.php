@@ -30,21 +30,6 @@ class EmployeesController extends Controller
         $this->view('admin.dashboard.manage_employee', $data);
     }
 
-    public function create()
-    {
-        $userModel = $this->model('UserModel');
-        $roles = $userModel->getAllRolesExceptClient();
-
-        $data = [
-            'title' => 'Agregar Empleado',
-            'short_title' => 'Nuevo Empleado',
-            'icon_page' => '<i class="fas fa-user-plus"></i>',
-            'roles' => $roles
-        ];
-
-        $this->view('admin.dashboard.add_employee', $data);
-    }
-
     public function new()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -171,10 +156,6 @@ class EmployeesController extends Controller
                     ]);
                     return;
                 }
-
-                // Manejo de errores no AJAX
-                header("Location: " . APP_URL . "/employees");
-                exit();
             }
         }
     }
@@ -196,7 +177,6 @@ class EmployeesController extends Controller
             return;
         }
 
-        header("Location: " . APP_URL . "/employees");
-        exit();
+
     }
 }

@@ -7,12 +7,13 @@
 
 
 <!-- Título en Caja de Cover -->
-<div class="d-flex justify-content-center align-items-center bg-dark text-white mb-4 mt-4" style="height: 200px;">
+<div class="d-flex justify-content-center align-items-center bg-warning mb-4 mt-4" style="height: 130px;">
     <h1 class="text-center text-uppercase">Información de Contacto</h1>
 </div>
 
 <!-- Sección de Contacto -->
 <section class="container my-5">
+<div class="card p-5">
 
     <div class="row">
 
@@ -63,6 +64,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 

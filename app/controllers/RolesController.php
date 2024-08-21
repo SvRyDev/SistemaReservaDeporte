@@ -13,41 +13,46 @@ class RolesController extends Controller
 
         $data = [
             'title' => 'Gestionar Roles',
-            'roles' => $roles,
-            'icon_page' => '<i class="mdi mdi-account-key"></i>',
             'short_title' => 'Roles',
+            'icon_page' => '<i class="mdi mdi-account-key"></i>',
             'module' => 'roles',
             'singular' => 'Rol',
+            'roles' => $roles,
 
         ];
+
+        if (isAjax()) {
+            echo json_encode($roles);
+            return;
+        }
+
 
         $this->view('admin.dashboard.manage_roles', $data);
     }
 
-    public function create()
-    {
-        $data = [
-            'title' => 'Gestionar Roles',
-            'icon_page' => '<i class="mdi mdi-account-key"></i>',
-            'short_title' => 'Roles',
-            'module' => 'roles',
-            'singular' => 'Rol',
-        ];
-
-        $this->view('admin.dashboard.add_role', $data);
-    }
-
-    public function store()
+    public function new()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
 
             $roleModel = $this->model('RoleModel');
-            $roleModel->createRole($nombre, $descripcion);
+            $idRole = $roleModel->createRole($nombre, $descripcion);
 
-            header("Location: " . APP_URL . "/roles");
-            exit();
+            if (isAjax()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Rol Registrado Correctamente :D',
+                    'role' => [
+                        'idRole' => $idRole,
+                        'nombre' => $nombre,
+                        'descripcion' => $descripcion,
+                    ]
+                ]);
+                return;
+            }
+  
         }
     }
 
@@ -56,39 +61,77 @@ class RolesController extends Controller
         $roleModel = $this->model('RoleModel');
         $role = $roleModel->getRoleById($idRol);
 
-        $data = [
-            'title' => 'Gestionar Roles',
-            'role' => $role,
-            'icon_page' => '<i class="mdi mdi-account-key"></i>',
-            'short_title' => 'Roles',
-            'module' => 'roles',
-            'singular' => 'Rol',
-        ];
-
-        $this->view('admin.dashboard.edit_role', $data);
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'role' => $role,
+            ]);
+            return;
+        }
     }
 
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $idRol = $_POST['idRol'];
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
 
-            $roleModel = $this->model('RoleModel');
-            $roleModel->updateRole($idRol, $nombre, $descripcion);
+            try {
 
-            header("Location: " . APP_URL . "/roles");
-            exit();
+                $idRol = $_POST['idRol'];
+                $nombre = $_POST['nombre'];
+                $descripcion = $_POST['descripcion'];
+
+                $roleModel = $this->model('RoleModel');
+                $roleModel->updateRole($idRol, $nombre, $descripcion);
+
+
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Rol Actualizado Correctamente :D',
+                        'employee' => [
+                            'idRol' => $idRol,
+                            'nombre' => $nombre,
+                            'descripcion' => $descripcion,
+
+                        ]
+                    ]);
+                    return;
+                }
+
+            
+            } catch (Exception $e) {
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                    return;
+                }
+
+
+            }
         }
     }
+
 
     public function delete($idRol)
     {
         $roleModel = $this->model('RoleModel');
         $roleModel->deleteRole($idRol);
 
-        header("Location: " . APP_URL . "/roles");
-        exit();
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+
+                'idRol' => $idRol,
+                'status' => 'success', 
+                'message' => 'Rol eliminado correctamente']
+            );
+            return;
+        }
+
+
     }
 }

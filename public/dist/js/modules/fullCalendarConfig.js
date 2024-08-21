@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Transformar los datos de reservas al formato que espera FullCalendar
     var events = reservationsData.map(function(reservation) {
       return {
-        title: 'Reserva :D',
-        start: reservation.fechaEntrada,
+        title: 'Reserva ' + reservation.estado_nombre + ":  " + reservation.fechaEntrada + " " + reservation.fechaSalida,
+        start: reservation.fechaEntrada, 
         end: reservation.fechaSalida,
         backgroundColor: reservation.estado_color,
         borderColor: reservation.estado_color,
@@ -19,26 +19,23 @@ document.addEventListener('DOMContentLoaded', function() {
   
     var calendar = new FullCalendar.Calendar(calendarEl, {
       themeSystem: 'bootstrap5',
-      height: '100vh',
-      initialView: 'timeGridWeek',
+      height: '50vh',
+      initialView: 'listMonth',
       locale: 'es',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,listWeek,listDay'
+        right: 'dayGridMonth, listWeek, listMonth'
       },
       views: {
         dayGridMonth: {
           buttonText: 'Mes'
         },
-        timeGridWeek: {
+        listWeek: {
           buttonText: 'Semana'
         },
-        listWeek: {
-          buttonText: 'Lista Semanal'
-        },
-        listDay: {
-          buttonText: 'Lista Dia'
+        listMonth: {
+          buttonText: 'Lista Mes'
         }
       },
       navLinks: true, // can click day/week names to navigate views
@@ -57,12 +54,14 @@ document.addEventListener('DOMContentLoaded', function() {
           var url = base_url +"/reservations/edit/" + id;
           
   
-          // Mostrar el modal y el spinner, ocultar el contenido
-          $('#eventModal').modal('show');
-          $('#loadingSpinner').show();
+
           $('#reservationContent').hide();
   
           fetchReservationDetails(url);
+
+                    // Mostrar el modal y el spinner, ocultar el contenido
+                    $('#eventModal').modal('show');
+                    $('#loadingSpinner').show();
         });
       },
       eventClick: function(info) {

@@ -75,7 +75,7 @@ $(document).ready(function () {
     icalendar = new FullCalendar.Calendar(calendarEl, {
       themeSystem: "bootstrap5",
       height: "500px",
-      initialView: "dayGridMonth",
+      initialView: "listMonth",
       headerToolbar: false,
 
       locale: "es",
@@ -95,8 +95,21 @@ $(document).ready(function () {
       },
       events: eventosArray,
 
-      navLinks: false, // can click day/week names to navigate views
-    });
+      navLinks: false,
+
+   // Personalización de eventos
+   eventContent: function (arg) {
+    // Define un gradiente de fondo para los eventos
+    var gradientStyle = `background: linear-gradient(to right, ${arg.event.backgroundColor} 30%, ${arg.event.backgroundColor}99 100%);`;
+
+    // Retorna el contenido HTML personalizado para el evento
+    return {
+      html: `<div style="${gradientStyle}; color: white" class="fc-event-title">${arg.event.title}</div>`,
+    };
+  },
+
+  // Otras configuraciones según necesidades
+});
 
     icalendar.render();
   }
@@ -121,7 +134,7 @@ $(document).ready(function () {
     // Crear y agregar el nuevo evento de referencia
     eventoSolicitado = {
       id: referenceEventId,
-      title: `${timeRangeStr}`,
+      title: `Espacio Disponible`,
       start: startDate,
       end: endDate,
       allDay: false,
@@ -162,7 +175,7 @@ $(document).ready(function () {
           data.forEach(function (evento) {
             eventosArray.push({
               id: evento.idReserva,
-              title: `Rservado`,
+              title: ` Reserva Agendado`,
               start: evento.fechaEntrada,
               end: evento.fechaSalida,
               allDay: false,
@@ -194,6 +207,7 @@ $(document).ready(function () {
         console.log(evento);
         if (evento) {
           evento.remove();
+          nuevaReserva.title = "Reserva Sobrepuesta"
           nuevaReserva.color = "#ff0000";
           icalendar.addEvent(nuevaReserva);
           solapamiento = true;
@@ -228,23 +242,38 @@ $(document).ready(function () {
     return `${startTimeStr} - ${endTimeStr}`;
   }
 
+  function formatDateString(dateString) {
+    // Crear el objeto Date a partir de la cadena de fecha y hora
+    let date = new Date(dateString);
+
+    // Convertir a ISO string y luego extraer solo la parte de fecha y hora
+    let isoString = date.toISOString(); // Esto da algo como '2024-07-07T06:30:00.000Z'
+
+    // Extraer solo la fecha y la hora y reemplazar la 'T' con un espacio
+    let formattedDate = isoString.substring(0, 19).replace('T', ' '); // Esto da '2024-07-07 06:30:00'
+
+    return formattedDate;
+}
 
 
   function GuardarNuevaReserva() {
+
+
+    console.log('Eñ costo del evento es '+ $("#costo-total").text());
     var reservaData = {
       idCampo:  $('#campodeportivo option:selected').val(), // Reemplaza con el valor adecuado
       idCliente:  id_cliente, // Reemplaza con el valor adecuado
       idEmpleado:  1, // Reemplaza con el valor adecuado
       detalle: "Reserva de prueba",
-      fechaEntrada:  eventoSolicitado.start, // Reemplaza con el valor adecuado
-      fechaSalida:  eventoSolicitado.end, // Reemplaza con el valor adecuado
+      fechaEntrada:  formatDateString(eventoSolicitado.start), // Reemplaza con el valor adecuado
+      fechaSalida:  formatDateString(eventoSolicitado.end), // Reemplaza con el valor adecuado
       duracion:  $('#duration').val(), // Reemplaza con el valor adecuado
-      precioTotal: $("#costo-total").val() , // Reemplaza con el valor adecuado
+      precioTotal: $("#costo-total").text(), // Reemplaza con el valor adecuado
       
     };
 
     $.ajax({
-      url: base_url+ "/ClientReservation/craeteReservation",
+      url: base_url+ "/ClientReservations/createReservation",
       type: "POST",
       data: reservaData,
       success: function (response) {

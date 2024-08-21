@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-lg-6 ">
                             <h5></h5>
-                            <a href="<?php echo APP_URL; ?>/sportsFields/create" class="btn btn-success text-white">
+                            <a href="<?php echo APP_URL; ?>/payments/create" class="btn btn-success text-white">
                                 <i class="fas fa-plus-circle"></i> Nuevo <?= $data['singular']; ?>
                             </a>
                         </div>

@@ -1,11 +1,11 @@
 <div class="modal fade" id="eventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">Nuevo Empleado</h5>
+            <div class="modal-header bg-success text-white" id="header-modal-form">
+                <h5 class="modal-title" id="eventModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?php echo APP_URL; ?>/employees/store" method="POST" id="employeeForm">
+            <form action="#" method="POST" id="employeeForm">
                 <div class="modal-body" id="eventDetails">
                 
 
@@ -60,7 +60,7 @@
 
                         <div class="form-group col-lg-2 col-md-3 col-sm-4 mt-2">
                             <label for="salario">Salario (S./):</label>
-                            <input type="text" name="salario" id="salario" class="form-control" placeholder="0.00" data-required data-currency>
+                            <input type="text" name="salario" id="salario" class="form-control" placeholder="#.00" data-required data-currency>
                             <div class="invalid-feedback">
                                 Por favor, ingrese el salario con formato ####.##.
                             </div>
@@ -101,8 +101,12 @@
                     
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="m-submitButton" class="btn text-white">Agregar Empleado</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" id="m-submitButton" class="btn btn-success text-white">
+                        
+                            Agregar Empleado
+                        
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="mdi mdi-close-circle"></i> Cerrar</button>
                   
                 </div>
             </form>

@@ -121,6 +121,26 @@ class ReservationModel extends Model {
         $stmt->execute();
     }
 
+
+    public function getReservationsByUserId($idUsuario) {
+        $stmt = $this->db->prepare("SELECT Reserva.*, 
+                                           CampoDeportivo.codigo AS campo_codigo, 
+                                           Cliente.nombre AS cliente_nombre, 
+                                           Empleado.nombre AS empleado_nombre, 
+                                           EstadoReserva.nombre AS estado_nombre, 
+                                           EstadoReserva.color AS estado_color
+                                    FROM Reserva
+                                    JOIN CampoDeportivo ON Reserva.idCampo = CampoDeportivo.idCampo
+                                    JOIN Cliente ON Reserva.idCliente = Cliente.idCliente
+                                    JOIN Empleado ON Reserva.idEmpleado = Empleado.idEmpleado
+                                    JOIN EstadoReserva ON Reserva.idEstado = EstadoReserva.idEstado
+                                    WHERE Reserva.activo = TRUE
+                                    AND Cliente.idUsuario = :idUsuario");
+        $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function deleteReservation($idReserva) {
         // Eliminar implementos deportivos asociados
         $this->deleteSportEquipmentsFromReservation($idReserva);
@@ -137,7 +157,7 @@ class ReservationModel extends Model {
     }
 
     public function getReservationById($idReserva) {
-        $stmt = $this->db->prepare("SELECT r.*, c.nombre AS cliente_nombre FROM Reserva r, Cliente c WHERE c.idCliente = r.idCliente AND idReserva = :idReserva AND r.activo = TRUE");
+        $stmt = $this->db->prepare("SELECT r.*, c.nombre AS cliente_nombre, e.nombre AS estado_nombre, e.color AS estado_color FROM Reserva r, Cliente c, EstadoReserva e WHERE e.idEstado = r.idEstado AND c.idCliente = r.idCliente AND idReserva = :idReserva AND r.activo = TRUE");
         $stmt->bindParam(':idReserva', $idReserva);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -159,7 +179,7 @@ class ReservationModel extends Model {
 
 
     public function getReservationDetails($idReserva) {
-        $stmt = $this->db->prepare("SELECT Reserva.idReserva, Cliente.nombre AS cliente_nombre, Reserva.fechaEntrada
+        $stmt = $this->db->prepare("SELECT Reserva.*, Cliente.nombre AS cliente_nombre
                                     FROM Reserva
                                     JOIN Cliente ON Reserva.idCliente = Cliente.idCliente
                                     WHERE Reserva.idReserva = :idReserva");

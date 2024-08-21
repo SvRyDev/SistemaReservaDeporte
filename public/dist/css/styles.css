@@ -1,0 +1,55 @@
+.form-control {
+  border-radius: 5px;
+}
+
+.modal-content {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+.btn-close {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 4px;
+}
+
+.bg-info-gradient {
+  background: rgb(34, 85, 164);
+  background: linear-gradient(
+    145deg,
+    rgb(0, 0, 0) 0%,
+    rgba(50, 91, 172, 1) 40%,
+    rgba(107, 140, 232, 1) 100%
+  );
+}
+
+.bg-success-gradient {
+  background: rgb(40, 183, 121);
+  background: linear-gradient(
+    145deg,
+    rgb(21, 129, 82) 0%,
+    rgba(47, 190, 128, 1) 55%,
+    rgba(89, 226, 166, 1) 99%
+  );
+}
+
+@media print {
+  .left-sidebar {
+    width: 0;
+    display: none;
+  }
+  .boton-imprimir {
+    display: none;
+  }
+  .page-wrapper {
+    margin-left: 0px !important;
+  }
+  .view-print {
+    display: block !important;
+  }
+}

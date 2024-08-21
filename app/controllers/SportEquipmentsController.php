@@ -13,68 +13,114 @@ class SportEquipmentsController extends Controller
 
         $data = [
             'title' => 'Gestionar Implementos Deportivos',
-            'equipments' => $equipments,
-            'icon_page' => '<i class="mdi mdi-tennis"></i>',
             'short_title' => 'Implementos Deportivos',
+            'icon_page' => '<i class="mdi mdi-tennis"></i>',
             'module' => 'SportEquipments',
             'singular' => 'Implemento Deportivo',
+            'equipments' => $equipments,
         ];
+
+        if (isAjax()) {
+            echo json_encode($equipments);
+            return;
+        }
+
 
         $this->view('admin.dashboard.manage_sport_equipments', $data);
     }
 
-    public function create()
-    {
-        $data = [
-            'title' => 'Agregar Implemento Deportivo'
-        ];
 
-        $this->view('admin.dashboard.add_sport_equipment', $data);
-    }
-
-    public function store()
+    //Create Data
+    public function new()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
             $precioAlquiler = $_POST['precioAlquiler'];
-            $estado = $_POST['estado'];
+            $estado = isset($_POST['estado']) ? 1 : 0;
 
             $equipmentModel = $this->model('SportEquipmentModel');
-            $equipmentModel->createEquipment($nombre, $descripcion, $precioAlquiler, $estado);
+            $idImplemento = $equipmentModel->createEquipment($nombre, $descripcion, $precioAlquiler, $estado);
 
-            header("Location: " . APP_URL . "/sportEquipments");
-            exit();
+            if (isAjax()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'implemento Registrado Correctamente :D',
+                    'paymentMethod' => [
+                        'idImplemento' => $idImplemento,
+                        'nombre' => $nombre,
+                        'descripcion' => $descripcion,
+                        'precioAlquiler' => $precioAlquiler,
+                        'estado' => $estado,
+                    ]
+                ]);
+                return;
+            }
         }
     }
 
+    //Load Data by Id 
     public function edit($idImplemento)
     {
         $equipmentModel = $this->model('SportEquipmentModel');
         $equipment = $equipmentModel->getEquipmentById($idImplemento);
 
-        $data = [
-            'title' => 'Editar Implemento Deportivo',
-            'equipment' => $equipment
-        ];
 
-        $this->view('admin.dashboard.edit_sport_equipment', $data);
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'equipment' => $equipment,
+            ]);
+            return;
+        }
     }
 
+
+    //Update Data
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $idImplemento = $_POST['idImplemento'];
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
-            $precioAlquiler = $_POST['precioAlquiler'];
-            $estado = $_POST['estado'];
 
-            $equipmentModel = $this->model('SportEquipmentModel');
-            $equipmentModel->updateEquipment($idImplemento, $nombre, $descripcion, $precioAlquiler, $estado);
+            try {
 
-            header("Location: " . APP_URL . "/sportEquipments");
-            exit();
+                $idImplemento = $_POST['idImplemento'];
+                $nombre = $_POST['nombre'];
+                $descripcion = $_POST['descripcion'];
+                $precioAlquiler = $_POST['precioAlquiler'];
+                $estado = isset($_POST['estado']) ? 1 : 0;
+
+                $equipmentModel = $this->model('SportEquipmentModel');
+                $equipmentModel->updateEquipment($idImplemento, $nombre, $descripcion, $precioAlquiler, $estado);
+
+
+
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Implemento Actualizado Correctamente :D',
+                        'paymentMethod' => [
+                            'idImplemento' => $idImplemento,
+                            'nombre' => $nombre,
+                            'descripcion' => $descripcion,
+                            'precioAlquiler' => $precioAlquiler,
+                            'estado' => $estado,
+
+                        ]
+                    ]);
+                    return;
+                }
+            } catch (Exception $e) {
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                    return;
+                }
+            }
         }
     }
 
@@ -83,7 +129,17 @@ class SportEquipmentsController extends Controller
         $equipmentModel = $this->model('SportEquipmentModel');
         $equipmentModel->deleteEquipment($idImplemento);
 
-        header("Location: " . APP_URL . "/sportEquipments");
-        exit();
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                [
+
+                    'idMetodoPago' => $idImplemento,
+                    'status' => 'success',
+                    'message' => 'Implemento eliminado correctamente'
+                ]
+            );
+            return;
+        }
     }
 }

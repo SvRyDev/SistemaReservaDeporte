@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-lg-6 ">
                             <h5></h5>
-                            <button type="button" class="btn btn-success text-white add-employee-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
+                            <button type="button" class="btn btn-success text-white mdl-add-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
                                 <i class="fas fa-plus-circle"></i> Nuevo Empleado
                             </button>
 

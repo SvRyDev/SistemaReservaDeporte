@@ -11,47 +11,60 @@ class SportsFieldsController extends Controller
         $sportsFieldModel = $this->model('SportsFieldModel');
         $fields = $sportsFieldModel->getAllFields();
 
-        $data = [
-            'title' => 'Gestionar Campos Deportivos',
-            'fields' => $fields,
-            'icon_page' => '<i class="mdi mdi-stadium"></i>',
-            'short_title' => 'Campos Deportivos',
-            'module' => 'SportsFields',
-            'singular' => 'Campo Deportivo',
-        ];
-
-        $this->view('admin.dashboard.manage_sports_fields', $data);
-    }
-
-    public function create()
-    {
         $sportModel = $this->model('SportModel');
         $sports = $sportModel->getAllSports();
 
         $data = [
-            'title' => 'Agregar Campo Deportivo',
-            'sports' => $sports
+            'title' => 'Gestionar Campos Deportivos',
+            'short_title' => 'Campos Deportivos',
+            'icon_page' => '<i class="mdi mdi-stadium"></i>',
+            'module' => 'SportsFields',
+            'singular' => 'Campo Deportivo',
+            'fields' => $fields,
+            'sports' => $sports,
         ];
 
-        $this->view('admin.dashboard.add_sports_field', $data);
+        if (isAjax()) {
+            echo json_encode($fields);
+            return;
+        }
+
+        $this->view('admin.dashboard.manage_sports_fields', $data);
     }
 
-    public function store()
+    public function new()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $codigo = $_POST['codigo'];
             $alquilerHora = $_POST['alquilerHora'];
             $idTipoDeporte = $_POST['idTipoDeporte'];
-            $estado = $_POST['estado'];
+            $estado = "";
             $disponible = isset($_POST['disponible']) ? 1 : 0;
 
             $sportsFieldModel = $this->model('SportsFieldModel');
-            $sportsFieldModel->createField($codigo, $alquilerHora, $idTipoDeporte, $estado, $disponible);
+            $idCampo = $sportsFieldModel->createField($codigo, $alquilerHora, $idTipoDeporte, $estado, $disponible);
 
-            header("Location: " . APP_URL . "/sportsFields");
-            exit();
+            if (isAjax()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Campo Registrado Correctamente :D',
+                    'field' => [
+                        'idCampo' => $idCampo,
+                        'codigo' => $codigo,
+                        'alquilerHora' => $alquilerHora,
+                        'idTipoDeporte' => $idTipoDeporte,
+                        'estado' => $estado,
+                        'disponible' => $disponible,
+
+                        
+                    ]
+                ]);
+                return;
+            }
         }
     }
+
 
     public function edit($idCampo)
     {
@@ -61,31 +74,65 @@ class SportsFieldsController extends Controller
         $sportModel = $this->model('SportModel');
         $sports = $sportModel->getAllSports();
 
-        $data = [
-            'title' => 'Editar Campo Deportivo',
-            'field' => $field,
-            'sports' => $sports
-        ];
-
-        $this->view('admin.dashboard.edit_sports_field', $data);
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'field' => $field,
+                'sports' => $sports,
+            ]);
+            return;
+        }
     }
 
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            try {
+
             $idCampo = $_POST['idCampo'];
             $codigo = $_POST['codigo'];
             $alquilerHora = $_POST['alquilerHora'];
             $idTipoDeporte = $_POST['idTipoDeporte'];
-            $estado = $_POST['estado'];
+            $estado = "";
             $disponible = isset($_POST['disponible']) ? 1 : 0;
 
             $sportsFieldModel = $this->model('SportsFieldModel');
             $sportsFieldModel->updateField($idCampo, $codigo, $alquilerHora, $idTipoDeporte, $estado, $disponible);
 
-            header("Location: " . APP_URL . "/sportsFields");
-            exit();
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Campo Actualizado Correctamente :D',
+                        'field' => [
+                            'idCampo' => $idCampo,
+                            'codigo' => $codigo,
+                            'alquilerHora' => $alquilerHora,
+                            'idTipoDeporte' => $idTipoDeporte,
+                            'estado' => $estado,
+                            'disponible' => $disponible,
+                        ]
+                    ]);
+                    return;
+                }
+
+                header("Location: " . APP_URL . "");
+                exit();
+            } catch (Exception $e) {
+                if (isAjax()) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                    return;
+                }
+            }
         }
+
+
+        
     }
 
     public function delete($idCampo)
@@ -93,7 +140,16 @@ class SportsFieldsController extends Controller
         $sportsFieldModel = $this->model('SportsFieldModel');
         $sportsFieldModel->deleteField($idCampo);
 
-        header("Location: " . APP_URL . "/sportsFields");
-        exit();
+
+        if (isAjax()) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'idCampo' => $idCampo,
+                'status' => 'success', 
+                'message' => 'Campo eliminado correctamente']
+            );
+            return;
+        }
+
     }
 }

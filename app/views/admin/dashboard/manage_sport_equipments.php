@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/templates/header.php'; ?>
+<?php require_once __DIR__ . '/modals/modal_sportEquipments.php'; ?>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -11,9 +12,9 @@
                     <div class="row">
                         <div class="col-lg-6 ">
                             <h5></h5>
-                            <a href="<?php echo APP_URL; ?>/sportEquipments/create" class="btn btn-success text-white">
-                                <i class="fas fa-plus-circle"></i> Nuevo <?= $data['singular']; ?>
-                            </a>
+                            <button type="button" class="btn btn-success text-white mdl-add-btn" data-bs-toggle="modal" data-bs-target="#eventModal">
+                                <i class="fas fa-plus-circle"></i> Nuevo <?= $data['singular']?>
+                            </button>
                         </div>
 
 
@@ -33,23 +34,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($data['equipments'] as $equipment) : ?>
-                                    <tr>
-                                        <td><?php echo $equipment->idImplemento; ?></td>
-                                        <td><?php echo $equipment->nombre; ?></td>
-                                        <td><?php echo $equipment->descripcion; ?></td>
-                                        <td><?php echo $equipment->precioAlquiler; ?></td>
-                                        <td><?php echo $equipment->estado; ?></td>
-                                        <td>
-                                            <a class="btn btn-warning text-white edit-employee-btn btn-sm" href="<?php echo APP_URL; ?>/sportEquipments/edit/<?php echo $equipment->idImplemento; ?>">
-                                                <i class="far fa-edit"></i> Editar
-                                            </a>
-                                            <a class="btn btn-danger text-white delete-employee-btn btn-sm" href="<?php echo APP_URL; ?>/sportEquipments/delete/<?php echo $equipment->idImplemento; ?>">
-                                                <i class="fas fa-trash-alt"></i> Eliminar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

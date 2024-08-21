@@ -6,8 +6,20 @@
         <img class="logo " src="<?php assets(); ?>/images/logo-icon.png" alt="Logo" style="position: relative; height: 160px; width: auto;">
         <h1 class="display-4 mb-4 cover-title">Montalvan</h1>
         <p class="lead mb-4 ">Reserva tu Espacio Deportivo Ahora</p>
-        <a href="<?php base_url(); ?>/clientReservations" class="btn btn-warning btn-lg">Hacer mi Reserva</a>
-        <p class="lead mb-4 mt-4 ">Hola, <?php echo htmlspecialchars($_SESSION['user_name']); ?>.</p>
+
+        <?php if (isset($_SESSION['user_name'])) { ?>
+            <?php if ($_SESSION['is_employee']) { ?>
+                <a class="btn  btn-primary btn-lg" href="<?php echo APP_URL; ?>/dashboard">Dashboard</a>
+
+
+            <?php } else { ?>
+                <a href="<?php base_url(); ?>/clientReservations" class="btn btn-warning btn-lg">Hacer mi Reserva</a>
+
+        <?php      }
+        }; ?>
+
+
+        <p class="lead mb-4 mt-4 "><?php echo (!isset($_SESSION)) ? "Hola," . htmlspecialchars($_SESSION['user_name']) : "" ?></p>
 
 
         <style>
@@ -26,7 +38,7 @@
                 text-align: center;
             }
 
-            .logo{
+            .logo {
                 animation: fadeInUp 1s ease-in-out;
             }
 
@@ -78,57 +90,60 @@
 
 
 <!-- Main Content -->
-<div class="container my-5">
+<div class="card-body" style="background-color: white;">
+    <div class="container my-5">
 
-    <div class="row justify-content-between text-center">
-        <div class="col-md-3 mb-5">
-            <img src="<?= assets(); ?>/image/icons/icon01.svg" class="img-fluid" alt="Descripción de la imagen">
-            <h2>Compromiso</h2>
+        <div class="row justify-content-between text-center">
+            <div class="col-md-3 mb-5">
+                <img src="<?= assets(); ?>/image/icons/icon01.svg" class="img-fluid" alt="Descripción de la imagen">
+                <h2>Compromiso</h2>
 
-            <div class="list-group">
-                <p>
-                    Nos dedicamos a brindar un servicio excepcional y a cumplir con nuestras promesas a nuestros clientes y comunidad.
-                </p>
+                <div class="list-group">
+                    <p>
+                        Nos dedicamos a brindar un servicio excepcional y a cumplir con nuestras promesas a nuestros clientes y comunidad.
+                    </p>
+
+                </div>
+
+            </div>
+            <div class="col-md-3 mb-5">
+
+                <img src="<?= assets(); ?>/image/icons/icon02.svg" class="img-fluid" alt="Descripción de la imagen">
+                <h2>Innovación</h2>
+
+                <div class="list-group">
+                    <p>
+                        Buscamos constantemente nuevas formas de mejorar nuestros servicios y procesos para ofrecer la mejor experiencia posible.
+                    </p>
+
+                </div>
 
             </div>
 
-        </div>
-        <div class="col-md-3 mb-5">
+            <div class="col-md-3 mb-5">
 
-            <img src="<?= assets(); ?>/image/icons/icon02.svg" class="img-fluid" alt="Descripción de la imagen">
-            <h2>Innovación</h2>
+                <img src="<?= assets(); ?>/image/icons/icon03.svg" class="img-fluid" alt="Descripción de la imagen">
+                <h2></h2>
 
-            <div class="list-group">
-                <p>
-                    Buscamos constantemente nuevas formas de mejorar nuestros servicios y procesos para ofrecer la mejor experiencia posible.
-                </p>
+                <div class="list-group">
+                    <p>
+                        Mantenemos altos estándares en todas nuestras instalaciones y servicios, asegurando un entorno seguro y agradable para nuestros usuarios.
+                    </p>
 
-            </div>
-
-        </div>
-
-        <div class="col-md-3 mb-5">
-
-            <img src="<?= assets(); ?>/image/icons/icon03.svg" class="img-fluid" alt="Descripción de la imagen">
-            <h2></h2>
-
-            <div class="list-group">
-                <p>
-                    Mantenemos altos estándares en todas nuestras instalaciones y servicios, asegurando un entorno seguro y agradable para nuestros usuarios.
-                </p>
+                </div>
 
             </div>
 
-        </div>
 
+
+        </div>
 
 
     </div>
 
-
-</div>
-
+    </div>
 
 
 
-<?php require_once 'templates/footer.php'; ?>
+
+    <?php require_once 'templates/footer.php'; ?>

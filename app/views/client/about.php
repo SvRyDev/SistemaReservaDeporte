@@ -7,12 +7,17 @@
 
 
 <!-- Título en Caja de Cover -->
-<div class="d-flex justify-content-center align-items-center bg-dark text-white mb-4 mt-4" style="height: 200px;">
+<div class="d-flex justify-content-center align-items-center bg-warning mb-4 mt-4" style="height: 130px;">
     <h1 class="text-center text-uppercase">Sobre Nosotros</h1>
 </div>
 
 <!-- Sección de Contacto -->
+
+
 <section class="container my-5">
+<div class="card p-5">
+
+
 
     <div class="row">
 
@@ -40,6 +45,15 @@
             </div>
 
         </div>
+        <div class="col-md-6 mb-5">
+        <img src="<?= assets()?>/images/background/ball.png" class="img-thumbnail shadow  mb-5 bg-body-tertiary rounded">
+
+        </div>
+        <div class="col-md-6 mb-5">
+        <img src="<?= assets()?>/images/background/ball.png" class="img-thumbnail shadow  mb-5 bg-body-tertiary rounded">
+
+        </div>
+        
 
         <div class="col md 6">
             <h2>Nuestra Visión</h2>
@@ -52,6 +66,7 @@
         </div>
       
 
+    </div>
     </div>
 </section>
 

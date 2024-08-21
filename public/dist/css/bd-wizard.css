@@ -35,7 +35,7 @@ body {
       height: 100%;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      background-color: rgba(153, 155, 163, 0.1);
+      background-color: rgb(182, 182, 182);
       padding: 28px 30px 24px; }
       @media (max-width: 767px) {
         .wizard .steps > ul li a {
@@ -67,7 +67,7 @@ body {
     .wizard .steps > ul li .bd-wizard-step-subtitle {
       line-height: 1;
       font-size: 14px;
-      color: #c8c8c8; }
+      color: rgb(58, 58, 58); }
       @media (max-width: 767px) {
         .wizard .steps > ul li .bd-wizard-step-subtitle {
           display: none; } }
@@ -147,3 +147,7 @@ body {
     margin-left: 15px; }
 
 /*# sourceMappingURL=bd-wizard.css.map */
+
+.card{
+  border-radius: 10px !important;
+}

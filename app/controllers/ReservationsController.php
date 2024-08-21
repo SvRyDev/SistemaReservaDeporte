@@ -20,9 +20,18 @@ class ReservationsController extends Controller
             'title' => 'Gestionar Reservas',
             'short_title' => 'Reservas',
             'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+            'module' => 'reservations',
+
+
             'reservations' => $reservations,
-            'module' => 'reservations'
         ];
+
+        if (isAjax()) {
+            echo json_encode($reservations);
+            return;
+        }
+
+
 
         $this->view('admin.dashboard.manage_reservations', $data);
     }
@@ -36,6 +45,10 @@ class ReservationsController extends Controller
 
         $data = [
             'title' => 'Pagos de la Reserva',
+            'short_title' => 'Reservas',
+            'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+            'module' => 'reservations',
+            
             'reservation' => $reservation,
             'payments' => $payments
         ];
@@ -52,17 +65,21 @@ class ReservationsController extends Controller
         $clientModel = $this->model('ClientModel');
         $clients = $clientModel->getAllClients();
 
-        $stateModel = $this->model('StateModel');
-        $states = $stateModel->getAllStates();
+        $statusModel = $this->model('StatusModel');
+        $status = $statusModel->getAllStates();
 
         $sportEquipmentModel = $this->model('SportEquipmentModel');
         $equipments = $sportEquipmentModel->getAllEquipments();
 
         $data = [
             'title' => 'Agregar Reserva',
+            'short_title' => 'Reservas',
+            'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+            'module' => 'reservations',
+
             'fields' => $fields,
             'clients' => $clients,
-            'states' => $states,
+            'states' => $status,
             'equipments' => $equipments
         ];
 
@@ -80,16 +97,22 @@ class ReservationsController extends Controller
             $fechaSalida = $_POST['fechaSalida'];
             $duracion = $_POST['duracion'];
             $precioTotal = $_POST['precioTotal'];
+
+            
             $reservationModel = $this->model('ReservationModel');
             $sportsFieldModel = $this->model('SportsFieldModel');
             $clientModel = $this->model('ClientModel');
-            $stateModel = $this->model('StateModel');
+            $stateModel = $this->model('StatusModel');
             $sportEquipmentModel = $this->model('SportEquipmentModel');
 
             // Verificar si hay una reserva solapada
             if ($reservationModel->isOverlappingReservation($idCampo, $fechaEntrada, $fechaSalida)) {
                 $data = [
                     'title' => 'Agregar Reserva',
+                    'short_title' => 'Reservas',
+                    'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+                    'module' => 'reservations',
+        
                     'error' => 'Ya existe una reserva confirmada para este campo en el intervalo de tiempo seleccionado.',
                     'fields' => $sportsFieldModel->getAllFields(),
                     'clients' => $clientModel->getAllClients(),
@@ -122,38 +145,6 @@ class ReservationsController extends Controller
         }
     }
 
-    /*
-    public function edit($idReserva) {
-        $reservationModel = $this->model('ReservationModel');
-        $reservation = $reservationModel->getReservationById($idReserva);
-        $reservation->implementos = $reservationModel->getSportEquipmentsByReservation($idReserva);
-    
-        $sportsFieldModel = $this->model('SportsFieldModel');
-        $fields = $sportsFieldModel->getAllFields();
-    
-        $clientModel = $this->model('ClientModel');
-        $clients = $clientModel->getAllClients();
-    
-        $stateModel = $this->model('StateModel');
-        $states = $stateModel->getAllStates();
-    
-        $sportEquipmentModel = $this->model('SportEquipmentModel');
-        $equipments = $sportEquipmentModel->getAllEquipments();
-    
-        $data = [
-            'title' => 'Editar Reserva',
-            'reservation' => $reservation,
-            'fields' => $fields,
-            'clients' => $clients,
-            'states' => $states,
-            'equipments' => $equipments
-        ];
-    
-        $this->view('admin.dashboard.edit_reservation', $data);
-    }
-
-    */
-
     public function edit($encryptId)
     {
         $idReserva = hmacDecrypt($encryptId);
@@ -173,8 +164,8 @@ class ReservationsController extends Controller
         $clientModel = $this->model('ClientModel');
         $clients = $clientModel->getAllClients();
     
-        $stateModel = $this->model('StateModel');
-        $states = $stateModel->getAllStates();
+        $statusModel = $this->model('StatusModel');
+        $status = $statusModel->getAllStates();
     
         $sportEquipmentModel = $this->model('SportEquipmentModel');
         $equipments = $sportEquipmentModel->getAllEquipments();
@@ -189,10 +180,14 @@ class ReservationsController extends Controller
         } else {
             $data = [
                 'title' => 'Editar Reserva',
+                'short_title' => 'Reservas',
+                'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+                'module' => 'reservations',
+                
                 'reservation' => $reservation,
                 'fields' => $fields,
                 'clients' => $clients,
-                'states' => $states,
+                'status' => $status,
                 'equipments' => $equipments
             ];
             $this->view('admin.dashboard.edit_reservation', $data);
@@ -218,7 +213,7 @@ class ReservationsController extends Controller
             $reservationModel = $this->model('ReservationModel');
             $sportsFieldModel = $this->model('SportsFieldModel');
             $clientModel = $this->model('ClientModel');
-            $stateModel = $this->model('StateModel');
+            $stateModel = $this->model('StatusModel');
             $sportEquipmentModel = $this->model('SportEquipmentModel');
 
             // Verificar si hay una reserva solapada, excluyendo la reserva actual
@@ -275,7 +270,7 @@ class ReservationsController extends Controller
 
     public function updateState($idReserva)
     {
-        $stateModel = $this->model('StateModel');
+        $stateModel = $this->model('StatusModel');
         $states = $stateModel->getAllStates();
         $reservationModel = $this->model('ReservationModel');
         $reservation = $reservationModel->getReservationById($idReserva);
@@ -290,6 +285,10 @@ class ReservationsController extends Controller
 
         $data = [
             'title' => 'Actualizar Estado de Reserva',
+            'short_title' => 'Reservas',
+            'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+            'module' => 'reservations',
+
             'reservation' => $reservation,
             'states' => $states
         ];
@@ -312,6 +311,10 @@ class ReservationsController extends Controller
 
         $data = [
             'title' => 'Actualizar Estado de Pago de Reserva',
+            'short_title' => 'Reservas',
+            'icon_page' => '<i class="mdi mdi-calendar-clock"></i>',
+            'module' => 'reservations',
+
             'reservation' => $reservation
         ];
 

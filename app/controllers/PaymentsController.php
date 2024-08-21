@@ -13,11 +13,12 @@ class PaymentsController extends Controller
 
         $data = [
             'title' => 'Gestionar Pagos',
-            'payments' => $payments,
-            'icon_page' => '<i class="mdi mdi-credit-card"></i>',
             'short_title' => 'Pagos',
-            'module' => 'payments',
             'singular' => 'Pago',
+            'module' => 'payments',
+            'icon_page' => '<i class="mdi mdi-credit-card"></i>',
+
+            'payments' => $payments,
         ];
 
         $this->view('admin.dashboard.manage_payments', $data);
@@ -37,7 +38,12 @@ class PaymentsController extends Controller
         $methods = $paymentMethodModel->getAllPaymentMethods();
 
         $data = [
-            'title' => 'Agregar Pago',
+            'title' => 'Registrar Pago',
+            'short_title' => 'Pagos',
+            'singular' => 'Pago',
+            'module' => 'payments',
+            'icon_page' => '<i class="mdi mdi-credit-card"></i>',
+
             'reservation' => $reservation,
             'reservations' => $reservations, // Pasar todas las reservas a la vista
             'methods' => $methods,
@@ -83,6 +89,12 @@ class PaymentsController extends Controller
 
         $data = [
             'title' => 'Editar Pago',
+            'short_title' => 'Pagos',
+            'singular' => 'Pago',
+            'module' => 'payments',
+            'icon_page' => '<i class="mdi mdi-credit-card"></i>',
+
+
             'payment' => $payment,
             'reservation' => $reservation,
             'reservations' => $reservations,

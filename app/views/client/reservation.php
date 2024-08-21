@@ -2,11 +2,16 @@
 <br>
 <br>
 <br>
+<br>
+
+
+
+
 <main class="my-5">
   <div class="container mt-5">
 
 
-    <form id="example-form" class="" action="<?= base_url();?>" method='POST'>
+    <form id="example-form" class="" action="<?= base_url(); ?>" method='POST'>
       <h1>
         <div class="media d-flex text-decoration-none">
           <div class="bd-wizard-step-icon" id="wizard-0"><i class="mdi mdi-soccer"></i></div>
@@ -17,8 +22,12 @@
         </div>
       </h1>
       <fieldset>
-        <legend>Elige tu cancha</legend>
-        <div class="form-group col-lg-5 mt-2">
+        <div class="d-flex justify-content-center align-items-center bg-warning mb-4 p-1 ">
+          <h3 class="text-center text-uppercase">Elige tu cancha</h3>
+        </div>
+        <legend></legend>
+        <div class="row">
+        <div class="form-group col-lg-6 mt-2">
           <label for="deporte">Deporte:</label>
           <select class="form-control" id="deporte" name="deporte">
             <option value="" disabled selected>Selecciona una opción</option>
@@ -27,7 +36,7 @@
             Por favor, ingrese el salario con formato ####.##.
           </div>
         </div>
-        <div class="form-group col-lg-5 mt-2">
+        <div class="form-group col-lg-6 mt-2">
           <label for="campodeportivo">Campo Disponibles:</label>
           <select class="form-control" id="campodeportivo" name="campodeportivo">
             <option value="" disabled selected>Selecciona una opción</option>
@@ -36,6 +45,11 @@
             Por favor, ingrese el salario con formato ####.##.
           </div>
         </div>
+
+        </div>
+        
+
+
       </fieldset>
 
       <h1>
@@ -47,38 +61,42 @@
           </div>
         </div>
       </h1>
+
+
       <fieldset>
 
         <div class="row">
+          <div class="col-lg-4">
+            <legend>Horarios Disponibles</legend>
+            <div class="form-group col-lg-12 mt-2">
+              <label for="dias-reserva">Seleccione un día:</label>
+              <select id="dias-reserva" class="form-control" name="dias-reserva">
+              </select>
+              <div class="invalid-feedback">
+                Por favor, ingrese el salario con formato.
+              </div>
+            </div>
+            <div class="form-group col-lg-12 mt-2">
+              <label for="start-time">Seleccione la hora de inicio:</label>
+              <select id="start-time" class="form-control" name="start-time">
+              </select>
+              <div class="invalid-feedback">
+                Por favor, ingrese el salario con formato.
+              </div>
+            </div>
+            <div class="form-group col-lg-12 mt-2">
+              <label for="duration">Total de Horas:</label>
+              <select id="duration" class="form-control" name="duration">
+              </select>
+              <div class="invalid-feedback">
+                Por favor, ingrese el salario con formato.
+              </div>
+            </div>
+          </div>
 
-          <legend>Horarios Disponibles</legend>
-          <div class="form-group col-lg-5 mt-2">
-            <label for="dias-reserva">Seleccione un día:</label>
-            <select id="dias-reserva" class="form-control" name="dias-reserva">
-            </select>
-            <div class="invalid-feedback">
-              Por favor, ingrese el salario con formato.
-            </div>
-          </div>
-          <div class="form-group col-lg-5 mt-2">
-            <label for="start-time">Seleccione la hora de inicio:</label>
-            <select id="start-time" class="form-control" name="start-time">
-            </select>
-            <div class="invalid-feedback">
-              Por favor, ingrese el salario con formato.
-            </div>
-          </div>
-          <div class="form-group col-lg-2 mt-2">
-            <label for="duration">Total de Horas:</label>
-            <select id="duration" class="form-control" name="duration">
-            </select>
-            <div class="invalid-feedback">
-              Por favor, ingrese el salario con formato.
-            </div>
-          </div>
 
+          <div class="col-lg-8 mt-4" id="calendarClient"></div>
         </div>
-        <div class="mt-4" id="calendarClient"></div>
       </fieldset>
 
       <h1>
@@ -126,7 +144,7 @@
         </div>
       </h1>
       <fieldset>
-        <legend>Final Step</legend>
+        <legend>Culmina tu Reserva</legend>
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Metodos de Pago</h5>
